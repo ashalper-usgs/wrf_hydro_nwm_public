@@ -22,3 +22,20 @@ export NCEP_WCOSS=0
 
 # Streamflow nudging: 0=Off, 1=On.
 export WRF_HYDRO_NUDGING=0
+
+# if on Yeti cluster
+if [ `hostname` = igskahcmgslih04.cr.usgs.gov ]; then
+    # Instructions from Joseph Hughes from Jeff Falgout (see
+    # https://usgs.slack.com/archives/GAHHHLN0L/p1526651785000069) for
+    # compiling on Yeti.
+
+    module load netcdf-parallel/4.4.1-intel intel/psxe-2018u1
+
+    # not yet sure if these are correct
+    export NETCDF_F_INC=/usr/include
+    export NETCDF_F_LIB=/usr/lib64
+    export NETCDF_INC=$NETCDF_F_INC
+    export NETCDF_LIB=$NETCDF_F_LIB
+
+    ./configure 3	    # 3 => ifort, Intel parallel (incl. Theia)
+fi
