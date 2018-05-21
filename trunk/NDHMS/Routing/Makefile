@@ -5,6 +5,14 @@
 
 include ../macros
 
+# TODO: See
+# https://www.gnu.org/software/autoconf-archive/ax_lib_netcdf4.html
+ifeq ($(shell hostname),igskahcmgslih04.cr.usgs.gov)
+  NETCDF4_FFLAGS = -I$(shell dirname $(shell locate netcdf.mod))
+else
+  NETCDF4_FFLAGS = -I$(NETCDFINC)
+endif
+
 OBJS = \
 	module_date_utilities_rt.o \
 	module_UDMAP.o \
@@ -13,7 +21,7 @@ OBJS = \
 	module_GW_baseflow.o \
 	module_gw_gw2d.o \
 	module_HYDRO_io.o \
- 	module_RT.o \
+	module_RT.o \
 	Noah_distr_routing.o \
 	module_channel_routing.o \
 	module_lsm_forcing.o \
@@ -23,20 +31,10 @@ OBJS = \
 
 all:	$(OBJS)
 
-#module_RT.o: module_RT.F
-#	@echo ""
-#	$(CPP) $(CPPFLAGS) $(*).F > $(*).f
-#	$(COMPILER90) -o $(@) $(F90FLAGS) $(MODFLAG)  $(*).f
-#	$(RMD) $(*).f
-#	@echo ""
-#	cp *.mod ../mod
-
 .F.o:
 	@echo "Routing Makefile:"
-	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-#	$(COMPILER90) -o $(@) $(F90FLAGS) $(MODFLAG) $(*).f
-	$(COMPILER90) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) -I$(NETCDFINC) $(*).f
-#	$(RMD) $(*).f
+	$(CPP) $(CPPFLAGS) $(NETCDF4_FFLAGS) $(*).F > $(*).f
+	$(COMPILER90) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) $(NETCDF4_FFLAGS) $(*).f
 	@echo ""
 	ar -r ../lib/libHYDRO.a $(@)
 	cp *.mod ../mod
@@ -103,7 +101,7 @@ else
 module_channel_routing.o: module_UDMAP.o\
 			  ../nudging/module_date_utils_nudging.o \
 		          ../nudging/module_nudging_utils.o \
-          		  ../nudging/module_stream_nudging.o
+		  ../nudging/module_stream_nudging.o
 endif
 
 clean:	
