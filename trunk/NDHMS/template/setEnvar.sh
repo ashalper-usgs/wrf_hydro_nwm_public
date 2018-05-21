@@ -31,9 +31,6 @@ if [ `hostname` = igskahcmgslih04.cr.usgs.gov ]; then
 
     module load netcdf-parallel/4.4.1-intel intel/psxe-2018u1
 
-    # not yet sure if these are correct
-    export NETCDF_F_INC=/usr/include
-    export NETCDF_F_LIB=/usr/lib64
     export NETCDF_INC=$NETCDF_F_INC
     export NETCDF_LIB=$NETCDF_F_LIB
 
