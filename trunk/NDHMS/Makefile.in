@@ -1,10 +1,42 @@
 # Makefile 
 
+# WRF-Hydro compile time options, former residing in
+# template/setEnvar.sh: these might need to be re-factored into a
+# global Makefile for inclusion by other Makefiles at some point.
+
+# This is a WRF environment variable. Always set to 1 = On for
+# compiling WRF-Hydro.
+WRF_HYDRO = 1
+
+# Enhanced diagnostic output for debugging: 0 = Off, 1 = On.
+HYDRO_D = 1
+
+# Spatially distributed parameters for NoahMP: 0 = Off, 1 = On.
+SPATIAL_SOIL = 0
+
+# RAPID model: 0 = Off, 1 = On.
+WRF_HYDRO_RAPID = 0
+
+# Large NetCDF file support: 0 = Off, 1 = On.
+WRFIO_NCD_LARGE_FILE_SUPPORT = 1
+
+# WCOSS file units: 0 = Off, 1 = On.
+NCEP_WCOSS = 0
+
+# Streamflow nudging: 0 = Off, 1 = On.
+WRF_HYDRO_NUDGING = 0
+
+SUBDIRS = MPP Data_Rec Routing HYDRO_drv
+
+.PHONY: clean
+
 all:
 	@if [ ! -d "Run" ]; then \
 	  (mkdir Run); \
 	fi
-	make -f Makefile.comm BASIC
+	for dir in $(SUBDIRS); do \
+	  (cd "$$dir" && make); \
+	done
 	@if [ -d "LandModel_cpl" ]; then \
 	  (cd LandModel_cpl; make); \
 	fi
@@ -23,11 +55,13 @@ clean:
 	@if [ -d "LandModel_cpl" ]; then \
 	  (cd LandModel_cpl; make clean); \
 	fi
-	make -f Makefile.comm clean
+	for dir in $(SUBDIRS); do \
+	  (cd "$$dir" && make clean); \
+	done
 	@if [ -d "LandModel" ]; then \
 	  (cd LandModel; make clean); \
 	fi
 	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
 	  (cd Rapid_routing; make -f makefile.cpl clean); \
 	fi
-	rm -f */*.mod */*.o lib/*.a Run/wrf_hydro.exe
+	rm -f */*.mod */*.o lib/*.a CPL/*/*.o CPL/*/*.mod Run/wrf_hydro.exe
