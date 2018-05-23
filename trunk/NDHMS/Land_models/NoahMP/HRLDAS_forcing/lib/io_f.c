@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef _BZIP_YES
+#ifdef HAVE_LIBBZ2
 #include <bzlib.h> 
 #endif
 
@@ -63,7 +63,7 @@
 struct GribFileInfo {
   FILE *fd;
   int compression;
-#ifdef _BZIP_YES
+#ifdef HAVE_LIBBZ2
   BZFILE* b;
 #endif
 
@@ -113,7 +113,7 @@ void c_gribopen(char *filename, struct GribFileInfo **GFPTR, int *ierr) {
     *ierr = 0;
   }
 
-#ifdef _BZIP_YES
+#ifdef HAVE_LIBBZ2
   /* If the file ends in ".bz2", assume it is a bzip2-compressed file, and */
   /* initialize things for reading a bzip2-compressed file.                */
   
@@ -154,7 +154,7 @@ void c_close(struct GribFileInfo **GFPTR) {
   default:
     printf("Unrecognized compression:  %i\n",(*GFPTR)->compression);
     exit (1);
-#ifdef _BZIP_YES
+#ifdef HAVE_LIBBZ2
   case 2:
     BZ2_bzReadClose ( &bzerror, (*GFPTR)->b );
     if ( bzerror != BZ_OK ) {
@@ -185,7 +185,7 @@ void io_fread(struct GribFileInfo **GFPTR, char *buf, int *nread, int *iread, in
   default:
     printf("Unrecognized compression:  %i\n",(*GFPTR)->compression);
     exit (1);
-#ifdef _BZIP_YES
+#ifdef HAVE_LIBBZ2
   case 2:
     read_return = BZ2_bzRead ( &bzerror, (*GFPTR)->b, buf, *nread );
     break;
