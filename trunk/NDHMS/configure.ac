@@ -2,13 +2,23 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_INIT([WRF-Hydro], [0.1], [https://ral.ucar.edu/projects/wrf_hydro/contact])
 AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
+
+# C compiler
 AC_PROG_CC
-AC_PROG_FC([mpif90], [Fortran 90])
+
+# Fortran compiler
+AC_PROG_FC([mpif90 gfortran], [Fortran 90])
+# MPI (Message Passing Interface). See acinclude.m4 and
+# https://github.com/stevengj/mpb/blob/master/m4/ax_mpi.m4
+AX_MPI
+# TODO: these might not apply on all platforms
+FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
+
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
