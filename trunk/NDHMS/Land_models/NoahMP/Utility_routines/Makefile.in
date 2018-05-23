@@ -1,36 +1,19 @@
-# Makefile 
-#
-.SUFFIXES:
-.SUFFIXES: .o .F
+CPP = @CPP@
+FC = @FC@
+FCFLAGS = @FCFLAGS@
 
-include ../user_build_options
+modules = module_date_utilities module_model_constants \
+	  module_wrf_utilities kwm_string_utilities
 
-OBJS = \
-	module_date_utilities.o \
-	module_model_constants.o \
-	module_wrf_utilities.o \
-	kwm_string_utilities.o
-	
-CPPHRLDAS = -D_HRLDAS_OFFLINE_
+objects = $(addsuffix .o, $(modules))
 
+all: $(objects)
 
-all:	$(OBJS)
+$(objects): %.o: %.f90
+	$(FC) $(FCFLAGS) -o $@ -c $<
 
-.F.o:
-	@echo ""
-	$(RM) $(*).f90
-	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(COMPILERF90) -o $(@) -c $(F90FLAGS) $(LDFLAGS) $(FREESOURCE) $(*).f90
-	@echo ""
-
-#
-# Dependencies:
-#
-
-#
-# This command cleans up object (etc.) files:
-#
+$(addsuffix .f90, $(modules)): %.f90: %.F
+	$(CPP) $(CPPFLAGS) $< > $@
 
 clean:
-	$(RM) *.o *.mod *.stb *~ *.f90
-
+	rm -f *.o *.mod *.stb *~ *.f90
