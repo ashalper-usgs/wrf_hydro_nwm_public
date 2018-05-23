@@ -8,6 +8,7 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_FC([mpif90], [Fortran 90])
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
@@ -19,7 +20,7 @@ AC_CHECK_LIB([X11], [main])
 # FIXME: Replace `main' with a function in `-lXext':
 AC_CHECK_LIB([Xext], [main])
 # FIXME: Replace `main' with a function in `-lbz2':
-AC_CHECK_LIB([bz2], [main])
+AC_CHECK_LIB([bz2], [BZ2_bzReadOpen])
 # FIXME: Replace `main' with a function in `-lg2c':
 AC_CHECK_LIB([g2c], [main])
 # FIXME: Replace `main' with a function in `-lhdf5':
