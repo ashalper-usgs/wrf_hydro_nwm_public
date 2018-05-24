@@ -1,21 +1,26 @@
-# Makefile 
+# Makefile.in
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
 
 FC = @FC@
 FCFLAGS = @FCFLAGS@
 
-objects = $(addsuffix , CPL_WRF mpp_land module_mpp_ReachLS module_mpp_GWBUCKET)
+objects = \
+  $(addsuffix .o, \
+	CPL_WRF mpp_land module_mpp_ReachLS module_mpp_GWBUCKET)
 
-all:	$(objects)
+all: $(objects)
+
+# TODO: move "ar" commands below to ../Makefile.in?
 
 mpp_land.o: mpp_land.F
 	$(FC) $(FCFLAGS) $(LDFLAGS) -c $(*).F
 	ar -r ../lib/libHYDRO.a $(@)
 
 CPL_WRF.o: CPL_WRF.F
-	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
+	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(*).F > $(*).f
 	$(FC) -o $(@) $(FCFLAGS) $(LDFLAGS) $(MODFLAG) $(*).f
 	$(FC) $(FCFLAGS) $(LDFLAGS) -c $(*).F
 	ar -r ../lib/libHYDRO.a $(@)
