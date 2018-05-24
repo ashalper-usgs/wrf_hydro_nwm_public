@@ -6532,6 +6532,11 @@ done
 
 # Compile options.
 
+# This was hard-coded in the previous Make system, and "gcc -E"
+# appears to be incompatible with $CPPFLAGS (see below) at the
+# moment. Try to fix, if possible.
+CPP=cpp
+
 # Check whether --enable-wrf-hydro was given.
 if test "${enable_wrf_hydro+set}" = set; then
   enableval=$enable_wrf_hydro;

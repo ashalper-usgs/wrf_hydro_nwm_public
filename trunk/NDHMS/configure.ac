@@ -82,6 +82,11 @@ AC_CHECK_FUNCS([pow strchr strstr])
 
 # Compile options.
 
+# This was hard-coded in the previous Make system, and "gcc -E"
+# appears to be incompatible with $CPPFLAGS (see below) at the
+# moment. Try to fix, if possible.
+CPP=cpp
+
 AC_ARG_ENABLE(
   [wrf-hydro],
   AS_HELP_STRING(
