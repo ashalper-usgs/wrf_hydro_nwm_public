@@ -1,14 +1,12 @@
 # Makefile 
 
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@
+
 FC = @FC@
 FCFLAGS = @FCFLAGS@
 
-.SUFFIXES:
-.SUFFIXES: .o .F
-
-include ../macros
-
-objects = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
+objects = $(addsuffix , CPL_WRF mpp_land module_mpp_ReachLS module_mpp_GWBUCKET)
 
 all:	$(objects)
 
@@ -31,4 +29,4 @@ module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
 	ar -r ../lib/libHYDRO.a $(@)
 
 clean:
-	$(RMD) *.o *.mod *.stb *~
+	rm -f *.o *.mod *.s *.stb *~
