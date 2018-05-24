@@ -53,10 +53,23 @@ AC_CHECK_LIB([ncarg], [main])
 AC_CHECK_LIB([ncarg_c], [main])
 # FIXME: Replace `main' with a function in `-lncarg_gks':
 AC_CHECK_LIB([ncarg_gks], [main])
+
 # https://www.gnu.org/software/autoconf-archive/ax_lib_netcdf4.html
-AX_LIB_NETCDF4()
+AX_LIB_NETCDF4([parallel])
+# TODO: the AX_LIB_NETCDF4() call above is not finding the Intel
+# Fortran compiler on Yeti. This can be achieved with the command
+# "module load netcdf-parallel/4.4.1-intel" (see
+# https://modules.readthedocs.io/en/latest/), but this completely
+# alters the shell environment, which seems ungood in the context of
+# Autoconf at least. Try to fix.
+if [test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov"]; then
+  mod=`locate netcdf.mod`;
+  NETCDF4_FFLAGS=-I`dirname $mod`;
+  AC_SUBST([NETCDF4_FFLAGS])
+fi
 # FIXME: Replace `main' with a function in `-lnetcdf':
 AC_CHECK_LIB([netcdf], [main])
+
 # FIXME: Replace `main' with a function in `-lpgc':
 AC_CHECK_LIB([pgc], [main])
 # FIXME: Replace `main' with a function in `-lpgftnrtl':

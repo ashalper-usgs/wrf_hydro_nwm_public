@@ -1372,7 +1372,7 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-netcdf4=yes/no/PATH
-                          base directory of NetCDF4 installation
+                          base directory of parallel NetCDF4 installation
 
 Some influential environment variables:
   CC          C compiler command
@@ -4219,6 +4219,7 @@ _ACEOF
 
 fi
 
+
 # https://www.gnu.org/software/autoconf-archive/ax_lib_netcdf4.html
 { $as_echo "$as_me:$LINENO: checking for a sed that does not truncate output" >&5
 $as_echo_n "checking for a sed that does not truncate output... " >&6; }
@@ -4961,11 +4962,11 @@ done
 
 
 
-if   test "" = ""        ; then
+if   test "parallel" = ""        ; then
     netcdf4_requested_mode="serial"
-elif test "" = "serial"  ; then
+elif test "parallel" = "serial"  ; then
     netcdf4_requested_mode="serial"
-elif test "" = "parallel"; then
+elif test "parallel" = "parallel"; then
     netcdf4_requested_mode="parallel"
 else
     { { $as_echo "$as_me:$LINENO: error:
@@ -5555,6 +5556,17 @@ _ACEOF
     fi
 fi
 
+# TODO: the AX_LIB_NETCDF4() call above is not finding the Intel
+# Fortran compiler on Yeti. This can be achieved with the command
+# "module load netcdf-parallel/4.4.1-intel" (see
+# https://modules.readthedocs.io/en/latest/), but this completely
+# alters the shell environment, which seems ungood in the context of
+# Autoconf at least. Try to fix.
+if test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov"; then
+  mod=`locate netcdf.mod`;
+  NETCDF4_FFLAGS=-I`dirname $mod`;
+
+fi
 # FIXME: Replace `main' with a function in `-lnetcdf':
 
 { $as_echo "$as_me:$LINENO: checking for main in -lnetcdf" >&5
@@ -5624,6 +5636,7 @@ _ACEOF
   LIBS="-lnetcdf $LIBS"
 
 fi
+
 
 # FIXME: Replace `main' with a function in `-lpgc':
 
