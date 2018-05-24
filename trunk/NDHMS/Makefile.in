@@ -31,37 +31,37 @@ SUBDIRS = MPP Data_Rec Routing HYDRO_drv
 .PHONY: clean
 
 all:
-	@if [ ! -d "Run" ]; then \
+	if [ ! -d "Run" ]; then \
 	  (mkdir Run); \
 	fi
 	for dir in $(SUBDIRS); do \
 	  (cd "$$dir" && make); \
 	done
-	@if [ -d "LandModel_cpl" ]; then \
-	  (cd LandModel_cpl; make); \
+	if [ -d "LandModel_cpl" ]; then \
+	  (cd LandModel_cpl && make); \
 	fi
 	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
-	  (cd lib; rm -f librapid.a); \
+	  (cd lib && rm -f librapid.a); \
 	fi
 	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
-	  (cd Rapid_routing; make -f makefile.cpl rapid); \
+	  (cd Rapid_routing && make -f makefile.cpl rapid); \
 	fi
-	@if [ -d "LandModel" ]; then \
-	  (cd LandModel; make ; rm -f ../../Run/wrf_hydro.exe; \
+	if [ -d "LandModel" ]; then \
+	  (cd LandModel && make ; rm -f ../../Run/wrf_hydro.exe; \
 	   mv run/hrldas.exe  ../../Run/wrf_hydro.exe); \
 	fi
 
 clean:
-	@if [ -d "LandModel_cpl" ]; then \
-	  (cd LandModel_cpl; make clean); \
+	if [ -d "LandModel_cpl" ]; then \
+	  (cd LandModel_cpl; make $@); \
 	fi
 	for dir in $(SUBDIRS); do \
-	  (cd "$$dir" && make clean); \
+	  (cd "$$dir" && make $@); \
 	done
-	@if [ -d "LandModel" ]; then \
-	  (cd LandModel; make clean); \
+	if [ -d "LandModel" ]; then \
+	  (cd LandModel; make $@); \
 	fi
 	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
-	  (cd Rapid_routing; make -f makefile.cpl clean); \
+	  (cd Rapid_routing; make -f makefile.cpl $@); \
 	fi
 	rm -f */*.mod */*.o lib/*.a CPL/*/*.o CPL/*/*.mod Run/wrf_hydro.exe
