@@ -1,5 +1,13 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
+# File - configure.ac
+#
+# Purpose - GNU Autoconf
+#           (https://www.gnu.org/software/autoconf/autoconf.html)
+#           input to produce "configure" script for WRF-Hydro. Process
+#           this file with "autoconf" to produce the configure script.
+#
+# Author - Output from "autoscan" modified by Andy Halper
+#          <ashalper@usgs.gov>
+#
 
 AC_PREREQ([2.63])
 AC_INIT([WRF-Hydro], [0.1], [https://ral.ucar.edu/projects/wrf_hydro/contact])
@@ -45,6 +53,8 @@ AC_CHECK_LIB([ncarg], [main])
 AC_CHECK_LIB([ncarg_c], [main])
 # FIXME: Replace `main' with a function in `-lncarg_gks':
 AC_CHECK_LIB([ncarg_gks], [main])
+# https://www.gnu.org/software/autoconf-archive/ax_lib_netcdf4.html
+AX_LIB_NETCDF4()
 # FIXME: Replace `main' with a function in `-lnetcdf':
 AC_CHECK_LIB([netcdf], [main])
 # FIXME: Replace `main' with a function in `-lpgc':
@@ -69,6 +79,130 @@ AC_TYPE_OFF_T
 
 # Checks for library functions.
 AC_CHECK_FUNCS([pow strchr strstr])
+
+# Compile options.
+
+AC_ARG_ENABLE(
+  [wrf-hydro],
+  AS_HELP_STRING(
+    [--disable-wrf-hydro],
+    [set WRF_HYDRO environment variable to 0; always enable for
+     compiling]
+  )
+)
+AS_IF(
+  [test "x$enable_wrf-hydro" != "xno"], [
+    export WRF_HYDRO=0
+  ], [
+    export WRF_HYDRO=1
+    # TODO: need to figure out where HYDRO_REALTIME gets set in the
+    # legacy system
+    CPPFLAGS="$CPPFLAGS -DWRF_HYDRO $HYDRO_REALTIME"
+  ]
+)
+
+AC_ARG_ENABLE(
+  [diagnostic],
+  AS_HELP_STRING(
+    [--disable-diagnostic],
+    [disable enhanced diagnostic output]
+  )
+)
+AS_IF(
+  [test "x$enable_diagnostic" != "xno"], [
+    export HYDRO_D=1
+    CPPFLAGS="$CPPFLAGS -DHYDRO_D"
+  ], [
+    export HYDRO_D=0
+  ]
+)
+
+AC_ARG_ENABLE(
+  [spatial-soil],
+  AS_HELP_STRING(
+    [--enable-spatial-soil],
+    [enable spatially distributed parameters for NoahMP]
+  )
+)
+AS_IF(
+  [test "x$enable_spatial-soil" = "xyes"], [
+    export SPATIAL_SOIL=1
+    CPPFLAGS="$CPPFLAGS -DSPATIAL_SOIL"
+  ], [
+    export SPATIAL_SOIL=0
+  ]
+)
+
+AC_ARG_ENABLE(
+  [wrf-hydro-rapid],
+  AS_HELP_STRING(
+    [--enable-wrf-hydro-rapid],
+    [enable RAPID model]
+  )
+)
+AS_IF(
+  [test "x$enable_wrf-hydro-rapid" = "xyes"], [
+    export WRF_HYDRO_RAPID=1
+    WRF_HYDRO="-DWRF_HYDRO -DWRF_HYDRO_RAPID $HYDRO_REALTIME"
+  ], [
+    export WRF_HYDRO_RAPID=0
+  ]
+)
+
+AC_ARG_ENABLE(
+  [wrfio-ncd-large-file-support],
+  AS_HELP_STRING(
+    [--disable-wrfio-ncd-large-file-support],
+    [disable large NetCDF file support]
+  )
+)
+AS_IF(
+  [test "x$enable_wrfio-ncd-large-file-support" != "xno"], [
+    export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+    CPPFLAGS="$CPPFLAGS -DWRFIO_NCD_LARGE_FILE_SUPPORT"
+  ], [
+    export WRFIO_NCD_LARGE_FILE_SUPPORT=0
+  ]
+)
+
+AC_ARG_ENABLE(
+  [ncep-wcoss],
+  AS_HELP_STRING(
+    [--enable-ncep-wcoss], [enable WCOSS file units]
+  )
+)
+AS_IF(
+  [test "x$enable_ncep-wcoss" = "xyes"], [
+    export NCEP_WCOSS=1
+  ], [
+    export NCEP_WCOSS=0
+  ]
+)
+
+AC_ARG_ENABLE(
+  [wrf-hydro-nudging],
+  AS_HELP_STRING(
+    [--enable-wrf-hydro-nudging], [enable streamflow nudging]
+  )
+)
+AS_IF(
+  [test "x$enable_wrf-hydro-nudging" = "xyes"], [
+    export WRF_HYDRO_NUDGING=1
+    CPPFLAGS="$CPPFLAGS -DWRF_HYDRO_NUDGING"
+  ], [
+    export WRF_HYDRO_NUDGING=0
+  ]
+)
+
+# This has to be here for now, because if set on the command line at
+# the time the configure script is run (preferable), the default C
+# preprocessor (cpp) can't cope with running the configure tests
+# associated with the code above, and the configure script will
+# die. Try to remove eventually.
+CPPFLAGS=\
+"-P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $CPPFLAGS"
+
+# Produce Makefiles.
 
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile
