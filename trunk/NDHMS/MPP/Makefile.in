@@ -11,27 +11,25 @@ objects = \
   $(addsuffix .o, \
 	CPL_WRF mpp_land module_mpp_ReachLS module_mpp_GWBUCKET)
 
-all: $(objects)
+all: ../lib/libHYDRO.a
 
-# TODO: move "ar" commands below to ../Makefile.in?
+# TODO: move "ar" command below to ../Makefile.in or
+# ../lib/Makefile.in?
 
-mpp_land.o: mpp_land.F
+../lib/libHYDRO.a: $(objects)
+	ar -r $@ $?
+
+mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o: %.o: %.F
+	$(FC) $(FCFLAGS) $(LDFLAGS) -c $<
+
+# commands here are a bit odd, but we're trying to preserve the former
+# build sequence where possible
+CPL_WRF.o: CPL_WRF.f
+	$(FC) -o $@ $(FCFLAGS) $(LDFLAGS) -I../mod $<
 	$(FC) $(FCFLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
 
-CPL_WRF.o: CPL_WRF.F
-	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(*).F > $(*).f
-	$(FC) -o $(@) $(FCFLAGS) $(LDFLAGS) $(MODFLAG) $(*).f
-	$(FC) $(FCFLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
-
-module_mpp_ReachLS.o: module_mpp_ReachLS.F
-	$(FC) $(FCFLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
-
-module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
-	$(FC) $(FCFLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
+CPL_WRF.f: CPL_WRF.F
+	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.s *.stb *~
+	rm -f *.o *.f *.mod *.s *.stb *~
