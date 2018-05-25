@@ -24,7 +24,7 @@ export NCEP_WCOSS=0
 export WRF_HYDRO_NUDGING=0
 
 # if on Yeti cluster
-if [ `hostname` = igskahcmgslih04.cr.usgs.gov ]; then
+if [ `hostname | grep '\.cr\.usgs\.gov'` ]; then
     # Instructions from Joseph Hughes from Jeff Falgout (see
     # https://usgs.slack.com/archives/GAHHHLN0L/p1526651785000069) for
     # compiling on Yeti.
