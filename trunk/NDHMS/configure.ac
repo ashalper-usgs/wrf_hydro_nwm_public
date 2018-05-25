@@ -20,13 +20,10 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC
 
 # Fortran compiler
-AC_PROG_FC([mpif90 gfortran], [Fortran 90])
+AC_PROG_FC
 # MPI (Message Passing Interface). See acinclude.m4 and
 # https://github.com/stevengj/mpb/blob/master/m4/ax_mpi.m4
 AX_MPI
-# TODO: these might not apply on all platforms
-FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
-
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
@@ -37,7 +34,6 @@ AC_CHECK_LIB([HYDRO], [main])
 AC_CHECK_LIB([X11], [main])
 # FIXME: Replace `main' with a function in `-lXext':
 AC_CHECK_LIB([Xext], [main])
-# FIXME: Replace `main' with a function in `-lbz2':
 AC_CHECK_LIB([bz2], [BZ2_bzReadOpen])
 # FIXME: Replace `main' with a function in `-lg2c':
 AC_CHECK_LIB([g2c], [main])
@@ -53,15 +49,8 @@ AC_CHECK_LIB([ncarg], [main])
 AC_CHECK_LIB([ncarg_c], [main])
 # FIXME: Replace `main' with a function in `-lncarg_gks':
 AC_CHECK_LIB([ncarg_gks], [main])
-
-# check for Very Special environment of Yeti
-# TODO: this still might need work. AX_LIB_NETCDF4 can't find "icc" to
-# compile netcdf.h.
-if [ test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov" ]; then
-  module load netcdf-parallel/4.4.1-intel
-fi
+# NetCDF
 AX_LIB_NETCDF4
-
 # FIXME: Replace `main' with a function in `-lpgc':
 AC_CHECK_LIB([pgc], [main])
 # FIXME: Replace `main' with a function in `-lpgftnrtl':
@@ -86,11 +75,6 @@ AC_TYPE_OFF_T
 AC_CHECK_FUNCS([pow strchr strstr])
 
 # Compile options.
-
-# This was hard-coded in the previous Make system, and "gcc -E"
-# appears to be incompatible with $CPPFLAGS (see below) at the
-# moment. Try to fix, if possible.
-CPP=cpp
 
 AC_ARG_ENABLE(
   [wrf-hydro],

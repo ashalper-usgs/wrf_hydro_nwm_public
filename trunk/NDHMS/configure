@@ -2782,7 +2782,7 @@ ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_fc_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  for ac_prog in mpif90 gfortran
+  for ac_prog in gfortran g95 xlf95 f95 fort ifort ifc efc pgf95 lf95 ftn xlf90 f90 pgf90 pghpf epcf90 g77 xlf f77 frt pgf77 cf77 fort77 fl32 af77
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -2826,7 +2826,7 @@ fi
 fi
 if test -z "$FC"; then
   ac_ct_FC=$FC
-  for ac_prog in mpif90 gfortran
+  for ac_prog in gfortran g95 xlf95 f95 fort ifort ifc efc pgf95 lf95 ftn xlf90 f90 pgf90 pghpf epcf90 g77 xlf f77 frt pgf77 cf77 fort77 fl32 af77
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3396,9 +3396,6 @@ _ACEOF
         :
 fi
 
-# TODO: these might not apply on all platforms
-FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
-
 { $as_echo "$as_me:$LINENO: checking whether ln -s works" >&5
 $as_echo_n "checking whether ln -s works... " >&6; }
 LN_S=$as_ln_s
@@ -3653,7 +3650,6 @@ _ACEOF
 
 fi
 
-# FIXME: Replace `main' with a function in `-lbz2':
 
 { $as_echo "$as_me:$LINENO: checking for BZ2_bzReadOpen in -lbz2" >&5
 $as_echo_n "checking for BZ2_bzReadOpen in -lbz2... " >&6; }
@@ -4219,13 +4215,7 @@ _ACEOF
 
 fi
 
-
-# check for Very Special environment of Yeti
-# TODO: this still might need work. AX_LIB_NETCDF4 can't find "icc" to
-# compile netcdf.h.
-if  test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov" ; then
-  module load netcdf-parallel/4.4.1-intel
-fi
+# NetCDF
 { $as_echo "$as_me:$LINENO: checking for a sed that does not truncate output" >&5
 $as_echo_n "checking for a sed that does not truncate output... " >&6; }
 if test "${ac_cv_path_SED+set}" = set; then
@@ -5561,7 +5551,6 @@ _ACEOF
     fi
 fi
 
-
 # FIXME: Replace `main' with a function in `-lpgc':
 
 { $as_echo "$as_me:$LINENO: checking for main in -lpgc" >&5
@@ -6468,11 +6457,6 @@ done
 
 
 # Compile options.
-
-# This was hard-coded in the previous Make system, and "gcc -E"
-# appears to be incompatible with $CPPFLAGS (see below) at the
-# moment. Try to fix, if possible.
-CPP=cpp
 
 # Check whether --enable-wrf-hydro was given.
 if test "${enable_wrf_hydro+set}" = set; then
