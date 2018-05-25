@@ -55,12 +55,9 @@ AC_CHECK_LIB([ncarg_c], [main])
 AC_CHECK_LIB([ncarg_gks], [main])
 
 # check for Very Special environment of Yeti
-AS_IF(
-  [test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov"], [
-    module load netcdf-parallel/4.4.1-intel
-  ]
-)
-# https://www.gnu.org/software/autoconf-archive/ax_lib_netcdf4.html
+if [ test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov" ]; then
+  module load netcdf-parallel/4.4.1-intel
+fi
 AX_LIB_NETCDF4
 
 # FIXME: Replace `main' with a function in `-lpgc':
