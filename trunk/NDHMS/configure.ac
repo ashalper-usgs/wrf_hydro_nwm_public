@@ -55,6 +55,8 @@ AC_CHECK_LIB([ncarg_c], [main])
 AC_CHECK_LIB([ncarg_gks], [main])
 
 # check for Very Special environment of Yeti
+# TODO: this still might need work. AX_LIB_NETCDF4 can't find "icc" to
+# compile netcdf.h.
 if [ test "x`hostname | sed 's/[a-z0-9]*\.//'`" = "xcr.usgs.gov" ]; then
   module load netcdf-parallel/4.4.1-intel
 fi
