@@ -80,9 +80,9 @@ else
 PRECIP_DOUBLE = 
 endif
 
-COMPILER90=	mpif90
+COMPILER90 = mpif90
 F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4
-MODFLAG	= -I./
+MODFLAG	= -I../Data_Rec -I../MPP
 LDFLAGS	=	
 CPP = cpp
 CPPFLAGS = -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(SPATIAL_SOIL) $(WRFIO_NCD_LARGE_FILE_SUPPORT)  $(WRF_HYDRO_NUDGING) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
@@ -115,8 +115,8 @@ all:	$(OBJS)
 .F.o:
 	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
 	$(COMPILER90) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) -I$(NETCDFINC) $(*).f
-	ar -r ../lib/libHYDRO.a $(@)
-	cp *.mod ../mod
+# TODO:	ar -r ../lib/libHYDRO.a $(@)
+# TODO:	cp *.mod ../mod
 
 module_gw_gw2d.o: ../Data_Rec/module_gw_gw2d_data.o module_HYDRO_io.o
 
