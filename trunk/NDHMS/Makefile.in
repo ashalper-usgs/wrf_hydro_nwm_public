@@ -1,5 +1,8 @@
 # Makefile.in
 
+# TODO: replace with Autoconf macro substitution.
+WRF_HYDRO_RAPID = 0
+
 all:
 	if [ ! -d "Run" ]; then \
 	   (mkdir Run); \
@@ -16,8 +19,8 @@ all:
 	   (cd Rapid_routing; make -f makefile.cpl rapid); \
 	fi
 	if [ -d "LandModel" ]; then \
-	   (cd LandModel; make; rm -f ../../Run/wrf_hydro.exe;
-	    mv run/hrldas.exe ../../Run/wrf_hydro.exe) \
+	   (cd LandModel; make; rm -f ../../Run/wrf_hydro.exe; \
+	    mv run/hrldas.exe ../../Run/wrf_hydro.exe); \
 	fi
 
 clean:
