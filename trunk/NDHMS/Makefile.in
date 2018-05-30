@@ -1,14 +1,14 @@
 # Makefile.in
 
+.PHONY: all BASIC clean
+
 # TODO: replace with Autoconf macro substitution.
 WRF_HYDRO_RAPID = 0
 
-all:
+all: BASIC
 	if [ ! -d "Run" ]; then \
 	   (mkdir Run); \
 	fi
-	rm -f Run/wrf_hydro.exe
-	make -f Makefile.comm BASIC
 	if [ -d "LandModel_cpl" ]; then \
 	   (cd LandModel_cpl; make); \
 	fi
@@ -23,11 +23,17 @@ all:
 	    mv run/hrldas.exe ../../Run/wrf_hydro.exe); \
 	fi
 
+BASIC:
+	cd MPP && make
+	cd Data_Rec && make
+	cd Routing && make
+	cd HYDRO_drv && make
+
 clean:
 	if [ -d "LandModel_cpl" ]; then \
 	   (cd LandModel_cpl; make clean) \
 	fi
-	make -f Makefile.comm clean
+	rm -f lib/*.a CPL/*/*.o CPL/*/*.mod
 	if [ -d "LandModel" ]; then \
 	   (cd LandModel; make clean) \
 	fi
@@ -35,3 +41,4 @@ clean:
 	   (cd Rapid_routing; make -f makefile.cpl clean); \
 	fi
 	rm -f */*.mod */*.o lib/*.a Run/wrf_hydro.exe *~
+
