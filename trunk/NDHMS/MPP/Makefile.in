@@ -5,58 +5,33 @@
 
 HYDRO_D = @HYDRO_D@
 
-ifeq ($(HYDRO_D),1)
-HYDRO_D = -DHYDRO_D $(WRF_HYDRO)
-else
-HYDRO_D = $(WRF_HYDRO)
-endif
-
-ifeq ($(OUTPUT_CHAN_CONN),1)
-OUTPUT_CHAN_CONN = -DOUTPUT_CHAN_CONN
-else
-OUTPUT_CHAN_CONN = 
-endif
-
-ifeq ($(PRECIP_DOUBLE),1)
-PRECIP_DOUBLE = -DPRECIP_DOUBLE
-else
-PRECIP_DOUBLE = 
-endif
-
 MPIFC = @MPIFC@
-F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
-MODFLAG	=
-LDFLAGS	=	
+# the supplemental flags below might not be necessary for non-gfortran
+# pedigree compilers
+FCFLAGS = @FCFLAGS@ -w -c -ffree-form
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
-
-LIBS =	
-NETCDFINC = $(NETCDF_INC)
-NETCDFLIB = -L$(NETCDF_LIB) -lnetcdff -lnetcdf
-NETCDF_INC = /usr/include
-NETCDF_LIB = netcdf
-NETCDFLIB = -Lnetcdff -lnetcdff
 
 OBJS = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
 
 all: $(OBJS)
 
 mpp_land.o: mpp_land.F
-	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) $(FCFLAGS) $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 CPL_WRF.o: CPL_WRF.F
-	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) $(*).f
-	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(CPP) $(CPPFLAGS) $(*).F > $(*).f
+	$(MPIFC) -o $(@) $(FCFLAGS) $(*).f
+	$(MPIFC) $(FCFLAGS) $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_ReachLS.o: module_mpp_ReachLS.F
-	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) $(FCFLAGS) $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
-	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) $(FCFLAGS) $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 clean:
