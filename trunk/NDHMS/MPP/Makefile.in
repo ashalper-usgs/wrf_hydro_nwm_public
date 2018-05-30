@@ -1,39 +1,95 @@
-# Makefile 
-#
+# Makefile.in
+
 .SUFFIXES:
 .SUFFIXES: .o .F
 
-include ../macros
+ifeq ($(SPATIAL_SOIL),1)
+SPATIAL_SOIL = -DSPATIAL_SOIL
+else
+SPATIAL_SOIL = 
+endif
 
-OBJS =  CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
+ifeq ($(HYDRO_REALTIME),1)
+HYDRO_REALTIME = -DHYDRO_REALTIME
+else
+HYDRO_REALTIME =
+endif
 
-all:	$(OBJS)
+ifeq ($(WRF_HYDRO),1)
+WRF_HYDRO = -DWRF_HYDRO $(HYDRO_REALTIME)
+else
+WRF_HYDRO =
+endif
+
+ifeq ($(WRF_HYDRO_RAPID),1)
+WRF_HYDRO = -DWRF_HYDRO -DWRF_HYDRO_RAPID $(HYDRO_REALTIME)
+endif
+
+ifeq ($(HYDRO_D),1)
+HYDRO_D = -DHYDRO_D $(WRF_HYDRO)
+else
+HYDRO_D = $(WRF_HYDRO)
+endif
+
+ifeq ($(WRFIO_NCD_LARGE_FILE_SUPPORT),1)
+WRFIO_NCD_LARGE_FILE_SUPPORT = -DWRFIO_NCD_LARGE_FILE_SUPPORT
+else
+WRFIO_NCD_LARGE_FILE_SUPPORT =
+endif
+
+ifeq ($(WRF_HYDRO_NUDGING),1)
+WRF_HYDRO_NUDGING = -DWRF_HYDRO_NUDGING
+else
+WRF_HYDRO_NUDGING = 
+endif
+
+ifeq ($(OUTPUT_CHAN_CONN),1)
+OUTPUT_CHAN_CONN = -DOUTPUT_CHAN_CONN
+else
+OUTPUT_CHAN_CONN = 
+endif
+
+ifeq ($(PRECIP_DOUBLE),1)
+PRECIP_DOUBLE = -DPRECIP_DOUBLE
+else
+PRECIP_DOUBLE = 
+endif
+
+COMPILER90 = mpif90 
+F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
+MODFLAG	=
+LDFLAGS	=	
+CPP = cpp
+CPPFLAGS = -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(SPATIAL_SOIL) $(WRFIO_NCD_LARGE_FILE_SUPPORT) $(WRF_HYDRO_NUDGING) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
+
+LIBS =	
+NETCDFINC = $(NETCDF_INC)
+NETCDFLIB = -L$(NETCDF_LIB) -lnetcdff -lnetcdf
+NETCDF_INC = /usr/include
+NETCDF_LIB = netcdf
+NETCDFLIB = -Lnetcdff -lnetcdff
+
+OBJS = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
+
+all: $(OBJS)
+
 mpp_land.o: mpp_land.F
-	@echo ""
-	$(RMD) $(*).o $(*).mod $(*).stb *~
 	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
+# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 CPL_WRF.o: CPL_WRF.F
-	@echo ""
-	$(RMD) $(*).o $(*).mod $(*).stb *~ *.f
 	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
 	$(COMPILER90) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) $(*).f
-        
 	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
+# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_ReachLS.o: module_mpp_ReachLS.F
-	@echo ""
-	$(RMD) $(*).o $(*).mod $(*).stb *~
 	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
+# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
-	@echo ""
-	$(RMD) $(*).o $(*).mod $(*).stb *~
 	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
-	ar -r ../lib/libHYDRO.a $(@)
+# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 clean:
-	$(RMD) *.o *.mod *.stb *~
+	rm -f *.o *.mod *.stb *~
