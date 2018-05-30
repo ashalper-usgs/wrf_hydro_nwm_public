@@ -94,7 +94,7 @@ AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  Land_models/NoahMP/run/Makefile
                  MPP/Makefile
                  Makefile
-                 Rapid_routing/makefile
+                 Rapid_routing/Makefile
                  Routing/Makefile
                  nudging/Makefile])
 AC_OUTPUT
