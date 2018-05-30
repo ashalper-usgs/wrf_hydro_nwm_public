@@ -55,7 +55,7 @@ else
 PRECIP_DOUBLE = 
 endif
 
-COMPILER90 = mpif90 
+MPIFC = @MPIFC@
 F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
 MODFLAG	=
 LDFLAGS	=	
@@ -74,21 +74,21 @@ OBJS = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
 all: $(OBJS)
 
 mpp_land.o: mpp_land.F
-	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 CPL_WRF.o: CPL_WRF.F
 	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-	$(COMPILER90) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) $(*).f
-	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) $(*).f
+	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_ReachLS.o: module_mpp_ReachLS.F
-	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
-	$(COMPILER90) $(F90FLAGS) $(LDFLAGS) -c $(*).F
+	$(MPIFC) $(F90FLAGS) $(LDFLAGS) -c $(*).F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 clean:
