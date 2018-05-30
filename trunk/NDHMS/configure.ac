@@ -12,6 +12,9 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_FC
+AC_LANG_PUSH([Fortran])
+AX_MPI				# MPI (Message Passing Interface) compiler
+AC_LANG_POP([Fortran])
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
