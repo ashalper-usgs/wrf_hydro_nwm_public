@@ -53,7 +53,7 @@ endif
 ifeq ($(HYDRO_D),1)
 HYDRO_D = -DHYDRO_D $(WRF_HYDRO)
 else
-HYDRO_D =  $(WRF_HYDRO)
+HYDRO_D = $(WRF_HYDRO)
 endif
 
 ifeq ($(WRFIO_NCD_LARGE_FILE_SUPPORT),1)
@@ -80,11 +80,11 @@ else
 PRECIP_DOUBLE = 
 endif
 
-COMPILER90=	mpif90  
-F90FLAGS  =       -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
-MODFLAG	=	-I./
+COMPILER90=	mpif90
+F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4
+MODFLAG	= -I./
 LDFLAGS	=	
-CPP	=       cpp
+CPP = cpp
 CPPFLAGS = -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(SPATIAL_SOIL) $(WRFIO_NCD_LARGE_FILE_SUPPORT)  $(WRF_HYDRO_NUDGING) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
 
 LIBS 	=	
@@ -92,7 +92,7 @@ NETCDFINC       =       $(NETCDF_INC)
 NETCDFLIB       =       -L$(NETCDF_LIB) -lnetcdff -lnetcdf
 NETCDF_INC = /usr/include
 NETCDF_LIB = netcdf
-NETCDFLIB       =       -Lnetcdff -lnetcdff
+NETCDFLIB = -Lnetcdff -lnetcdff
 
 OBJS = \
 	module_date_utilities_rt.o \
