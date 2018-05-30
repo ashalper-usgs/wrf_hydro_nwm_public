@@ -9,15 +9,6 @@ AC_INIT([WRF-Hydro], [0.1],
 AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
 AC_CONFIG_HEADERS([config.h])
 
-# TODO: need conditional AC_DEFINEs for all symbols in config.h.in
-AC_DEFINE(
-   [WRF_HYDRO], [1],
-   [This is a WRF environment variable. Always set to 1 = On for
-   compiling WRF-Hydro.]
-)
-AC_DEFINE([HYDRO_D])
-AC_DEFINE([WRFIO_NCD_LARGE_FILE_SUPPORT])
-
 # Checks for programs.
 AC_PROG_CC
 CPP=cpp				# gcc -E doesn't work right now
@@ -75,6 +66,9 @@ AC_TYPE_OFF_T
 
 # Checks for library functions.
 AC_CHECK_FUNCS([pow strchr strstr])
+
+# TODO: un-hard-code these
+CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND -DHYDRO_D -DWRFIO_NCD_LARGE_FILE_SUPPORT"
 
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile
