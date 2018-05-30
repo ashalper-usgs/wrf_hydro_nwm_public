@@ -3,6 +3,8 @@
 .SUFFIXES:
 .SUFFIXES: .o .F
 
+HYDRO_D = @HYDRO_D@
+
 ifeq ($(HYDRO_D),1)
 HYDRO_D = -DHYDRO_D $(WRF_HYDRO)
 else
@@ -26,7 +28,7 @@ F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -freco
 MODFLAG	=
 LDFLAGS	=	
 CPP = @CPP@
-CPPFLAGS = -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
+CPPFLAGS = @CPPFLAGS@
 
 LIBS =	
 NETCDFINC = $(NETCDF_INC)
@@ -58,4 +60,4 @@ module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 clean:
-	rm -f *.o *.mod *.stb *~
+	rm -f *.o *.mod *.f *.stb *~
