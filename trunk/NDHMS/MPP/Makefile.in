@@ -11,12 +11,12 @@ WRFIO_NCD_LARGE_FILE_SUPPORT = @WRFIO_NCD_LARGE_FILE_SUPPORT@
 NCEP_WCOSS = @NCEP_WCOSS@
 WRF_HYDRO_NUDGING = @WRF_HYDRO_NUDGING@
 
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@
 MPIFC = @MPIFC@
 # the supplemental flags below might not be necessary for non-gfortran
 # pedigree compilers
 FCFLAGS = @FCFLAGS@ -w -c -ffree-form
-CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
 
 OBJS = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
 
