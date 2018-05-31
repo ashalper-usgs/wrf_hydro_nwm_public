@@ -32,9 +32,9 @@ FCFLAGS = @FCFLAGS@ -w -c -ffree-form -ffree-line-length-none -fconvert=big-endi
 CPP = @CPP@
 CPPFLAGS = -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(WRF_HYDRO_NUDGING)
 
-OBJS = module_HYDRO_drv.o
+include ../global.mk
 
-all: $(OBJS) 
+all: $(HYDRO_drv_objects)
 
 .F.o:
 	$(CPP) $(CPPFLAGS) $(*).F > $(*).f
@@ -42,7 +42,7 @@ all: $(OBJS)
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 # TODO:	cp *.mod ../mod
 
-module_HYDRO_drv.o: $(addprefix ../Data_Rec/,module_namelist.o module_RT_data.o module_gw_gw2d_data.o) $(addprefix ../Routing/,module_GW_baseflow.o module_HYDRO_utils.o module_HYDRO_io.o module_RT.o)
+module_HYDRO_drv.o: $(Data_Rec_objects) $(addprefix ../Routing/,module_GW_baseflow.o module_HYDRO_utils.o module_HYDRO_io.o module_RT.o)
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
