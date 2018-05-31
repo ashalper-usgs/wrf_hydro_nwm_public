@@ -68,6 +68,10 @@ AC_TYPE_OFF_T
 # Checks for library functions.
 AC_CHECK_FUNCS([pow strchr strstr])
 
+# TODO: try to replace with macros if possible
+CPPFLAGS="-P -xassembler-with-cpp -traditional"
+FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
+
 AC_ARG_ENABLE(
   [wrf-hydro],
   AS_HELP_STRING(
@@ -83,7 +87,11 @@ AC_ARG_ENABLE(
     [--disable-hydro-d],
     [Disable enhanced diagnostic output for debugging.])
 )
-AS_IF([test "x$enable_hydro-d" != "xno"], [HYDRO_D=1], [HYDRO_D=0])
+AS_IF([test "x$enable_hydro-d" != "xno"], [
+        HYDRO_D=1
+        CPPFLAGS="$CPPFLAGS -DHYDRO_D"
+      ],
+      [HYDRO_D=0])
 AC_SUBST([HYDRO_D])
 
 AC_ARG_ENABLE(
@@ -91,8 +99,10 @@ AC_ARG_ENABLE(
   AS_HELP_STRING(
     [--enable-spatial-soil],
     [Enable spatially distributed parameters for NoahMP.]))
-AS_IF([test "x$enable_spatial-soil" = "xyes"],
-      [SPATIAL_SOIL=1],
+AS_IF([test "x$enable_spatial-soil" = "xyes"], [
+        SPATIAL_SOIL=1
+	CPPFLAGS="$CPPFLAGS -DSPATIAL_SOIL"
+      ],
       [SPATIAL_SOIL=0])
 AC_SUBST([SPATIAL_SOIL])
 
@@ -112,8 +122,11 @@ AC_ARG_ENABLE(
     [--disable-wrfio-ncd-large-file-support],
     [Disable large NetCDF file support.])
 )
-AS_IF([test "x$enable_wrfio-ncd-large-file-support" != "xno"],
-      [WRFIO_NCD_LARGE_FILE_SUPPORT=1], [WRFIO_NCD_LARGE_FILE_SUPPORT=0])
+AS_IF([test "x$enable_wrfio-ncd-large-file-support" != "xno"], [
+        WRFIO_NCD_LARGE_FILE_SUPPORT=1
+	CPPFLAGS="$CPPFLAGS -DWRFIO_NCD_LARGE_FILE_SUPPORT"
+      ],
+      [WRFIO_NCD_LARGE_FILE_SUPPORT=0])
 AC_SUBST([WRFIO_NCD_LARGE_FILE_SUPPORT])
 
 AC_ARG_ENABLE(
@@ -127,13 +140,12 @@ AC_ARG_ENABLE(
   [wrf-hydro-nudging],
   AS_HELP_STRING([--enable-wrf-hydro-nudging], [Enable streamflow nudging.])
 )
-AS_IF([test "x$enable_wrf-hydro-nudging" = "xyes"],
-      [WRF_HYDRO_NUDGING=1],
+AS_IF([test "x$enable_wrf-hydro-nudging" = "xyes"], [
+       WRF_HYDRO_NUDGING=1
+       CPPFLAGS="$CPPFLAGS -DWRF_HYDRO_NUDGING"
+      ],
       [WRF_HYDRO_NUDGING=0])
 AC_SUBST([WRF_HYDRO_NUDGING])
-
-# TODO: un-hard-code these
-CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND -DHYDRO_D -DWRFIO_NCD_LARGE_FILE_SUPPORT"
 
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile

@@ -5364,6 +5364,10 @@ fi
 done
 
 
+# TODO: try to replace with macros if possible
+CPPFLAGS="-P -xassembler-with-cpp -traditional"
+FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
+
 # Check whether --enable-wrf-hydro was given.
 if test "${enable_wrf_hydro+set}" = set; then :
   enableval=$enable_wrf_hydro;
@@ -5382,7 +5386,10 @@ if test "${enable_hydro_d+set}" = set; then :
 fi
 
 if test "x$enable_hydro-d" != "xno"; then :
-  HYDRO_D=1
+
+        HYDRO_D=1
+        CPPFLAGS="$CPPFLAGS -DHYDRO_D"
+
 else
   HYDRO_D=0
 fi
@@ -5394,7 +5401,10 @@ if test "${enable_spatial_soil+set}" = set; then :
 fi
 
 if test "x$enable_spatial-soil" = "xyes"; then :
-  SPATIAL_SOIL=1
+
+        SPATIAL_SOIL=1
+	CPPFLAGS="$CPPFLAGS -DSPATIAL_SOIL"
+
 else
   SPATIAL_SOIL=0
 fi
@@ -5418,7 +5428,10 @@ if test "${enable_wrfio_ncd_large_file_support+set}" = set; then :
 fi
 
 if test "x$enable_wrfio-ncd-large-file-support" != "xno"; then :
-  WRFIO_NCD_LARGE_FILE_SUPPORT=1
+
+        WRFIO_NCD_LARGE_FILE_SUPPORT=1
+	CPPFLAGS="$CPPFLAGS -DWRFIO_NCD_LARGE_FILE_SUPPORT"
+
 else
   WRFIO_NCD_LARGE_FILE_SUPPORT=0
 fi
@@ -5442,14 +5455,14 @@ if test "${enable_wrf_hydro_nudging+set}" = set; then :
 fi
 
 if test "x$enable_wrf-hydro-nudging" = "xyes"; then :
-  WRF_HYDRO_NUDGING=1
+
+       WRF_HYDRO_NUDGING=1
+       CPPFLAGS="$CPPFLAGS -DWRF_HYDRO_NUDGING"
+
 else
   WRF_HYDRO_NUDGING=0
 fi
 
-
-# TODO: un-hard-code these
-CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND -DHYDRO_D -DWRFIO_NCD_LARGE_FILE_SUPPORT"
 
 ac_config_files="$ac_config_files CPL/CLM_cpl/Makefile CPL/LIS_cpl/Makefile CPL/NUOPC_cpl/Makefile CPL/NoahMP_cpl/Makefile CPL/Noah_cpl/Makefile CPL/WRF_cpl/Makefile Data_Rec/Makefile HYDRO_drv/Makefile Land_models/Noah/GRAPHICS/HORIZ/Makefile Land_models/Noah/GRAPHICS/TIME_SERIES/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/lib/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/run/Makefile Land_models/Noah/IO_code/Makefile Land_models/Noah/Makefile Land_models/Noah/Noah/Makefile Land_models/Noah/Run/Makefile Land_models/Noah/Utility_programs/Makefile Land_models/Noah/Utility_programs/gcip_sw_to_grib/Makefile Land_models/Noah/Utility_routines/Makefile Land_models/Noah/VERIFICATION/Fluxes_statistics/Makefile Land_models/Noah/VERIFICATION/OKMeso_statistics/Makefile Land_models/NoahMP/HRLDAS_forcing/Makefile Land_models/NoahMP/HRLDAS_forcing/lib/Makefile Land_models/NoahMP/HRLDAS_forcing/run/Makefile Land_models/NoahMP/IO_code/Makefile Land_models/NoahMP/Makefile Land_models/NoahMP/Utility_routines/Makefile Land_models/NoahMP/phys/Makefile Land_models/NoahMP/run/Makefile MPP/Makefile Makefile Rapid_routing/Makefile Routing/Makefile nudging/Makefile"
 
