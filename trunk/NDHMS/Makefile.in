@@ -35,15 +35,10 @@ libHYDRO.a:
 	         $(addprefix HYDRO_drv/,$(HYDRO_drv_objects))
 
 clean:
-	if [ -d "LandModel_cpl" ]; then \
-	   (cd LandModel_cpl; make clean) \
-	fi
-	rm -f lib/*.a CPL/*/*.o CPL/*/*.mod
-	if [ -d "LandModel" ]; then \
-	   (cd LandModel; make clean) \
-	fi
+	cd LandModel_cpl && make clean
+	cd LandModel && make clean
 	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
 	   (cd Rapid_routing; make -f makefile.cpl clean); \
 	fi
-	rm -rf */*.mod */*.o libHYDRO.a Run *~
+	rm -rf */*.mod */*.o libHYDRO.a Run *~ lib/*.a CPL/*/*.o CPL/*/*.mod
 
