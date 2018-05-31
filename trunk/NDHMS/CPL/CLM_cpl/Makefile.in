@@ -1,33 +1,26 @@
 # Makefile 
-#
+
 .SUFFIXES:
 .SUFFIXES: .o .F
+
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@
+MPIFC = @MPIFC@
+FCFLAGS = @FCFLAGS@
 
 CLMOBJPATH = /d1/weiyu/scratch/merra_boulder
 
 CLM_MOD = -I $(CLMOBJPATH)/lnd/obj -I $(CLMOBJPATH)/lib/include
 
-include ../../macros
-
-MODFLAG =       -I./ -I ../../MPP -I ../../mod
-
-OBJS = \
+objects = \
 	module_clm_HYDRO.o \
 	clm_drv_HYDRO.o    
-all:	$(OBJS) 
+
+all: $(objects) 
 
 .F.o:
-	@echo ""
 	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-	$(COMPILER90) -o $(@) $(F90FLAGS) $(MODFLAG) -I ../../mod $(CLM_MOD) $(*).f
-	$(RMD) $(*).f
-	@echo ""
-	ar -r ../../lib/libHYDRO.a $(@)
-
-#
-# Dependencies:
-#
+	$(MPIFC) -o $(@) $(FCFLAGS) -I ../../mod $(CLM_MOD) $(*).f
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
-	cd ../..; make -f Makefile.comm clean
