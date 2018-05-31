@@ -46,5 +46,5 @@ clean:
 	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
 	   (cd Rapid_routing; make -f makefile.cpl clean); \
 	fi
-	rm -f */*.mod */*.o libHYDRO.a Run *~
+	rm -rf */*.mod */*.o libHYDRO.a Run *~
 
