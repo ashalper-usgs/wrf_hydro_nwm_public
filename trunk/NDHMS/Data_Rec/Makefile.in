@@ -1,13 +1,14 @@
 # Makefile.in
 
-.SUFFIXES:
 .SUFFIXES: .o .F
 
-MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
+
+MPIFC = @MPIFC@
+FCFLAGS = @FCFLAGS@
+NETCDF4_FFLAGS = @NETCDF4_FFLAGS@
 
 include ../global.mk
 
@@ -15,7 +16,7 @@ all: $(Data_Rec_objects)
 
 .F.o:
 	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(FCFLAGS) -I../MPP $(*).f
+	$(MPIFC) -o $(@) $(FCFLAGS) $(NETCDF4_FFLAGS) -I../MPP $(*).f
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
