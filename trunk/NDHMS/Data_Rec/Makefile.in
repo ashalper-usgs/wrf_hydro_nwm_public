@@ -5,30 +5,22 @@
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@ -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
-MODFLAG	=
-LDFLAGS	=	
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 
-LIBS =	
 NETCDFINC = $(NETCDF_INC)
 NETCDFLIB = -L$(NETCDF_LIB) -lnetcdff -lnetcdf
 NETCDF_INC = /usr/include
 NETCDF_LIB = netcdf
 NETCDFLIB = -Lnetcdff -lnetcdff
 
-OBJS = \
-	module_namelist.o \
-	module_RT_data.o \
-	module_gw_gw2d_data.o
+include ../global.mk
 
-all:	$(OBJS) 
+all: $(Data_Rec_objects)
 
 .F.o:
 	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(FCFLAGS) $(LDFLAGS) $(MODFLAG) -I../MPP $(*).f
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
-# TODO:	cp *.mod ../mod
+	$(MPIFC) -o $(@) $(FCFLAGS) -I../MPP $(*).f
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
