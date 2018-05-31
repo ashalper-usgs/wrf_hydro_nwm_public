@@ -42,6 +42,7 @@ AC_CHECK_LIB([ncarg], [main])
 AC_CHECK_LIB([ncarg_c], [main])
 # FIXME: Replace `main' with a function in `-lncarg_gks':
 AC_CHECK_LIB([ncarg_gks], [main])
+AX_LIB_NETCDF4
 # FIXME: Replace `main' with a function in `-lnetcdf':
 AC_CHECK_LIB([netcdf], [main])
 # FIXME: Replace `main' with a function in `-lpgc':
