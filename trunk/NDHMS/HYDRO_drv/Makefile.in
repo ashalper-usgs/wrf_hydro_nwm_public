@@ -39,10 +39,8 @@ all: $(HYDRO_drv_objects)
 .F.o:
 	$(CPP) $(CPPFLAGS) $(*).F > $(*).f
 	$(MPIFC) -o $(@) $(FCFLAGS) -I../Routing -I../MPP -I../Data_Rec $(*).f
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
-# TODO:	cp *.mod ../mod
 
-module_HYDRO_drv.o: $(Data_Rec_objects) $(addprefix ../Routing/,module_GW_baseflow.o module_HYDRO_utils.o module_HYDRO_io.o module_RT.o)
+module_HYDRO_drv.o: $(addprefix ../Data_Rec/,$(Data_Rec_objects)) $(addprefix ../Routing/,module_GW_baseflow.o module_HYDRO_utils.o module_HYDRO_io.o module_RT.o)
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
