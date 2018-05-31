@@ -3,51 +3,110 @@
 .SUFFIXES:
 .SUFFIXES: .o .F
 
-include ../user_build_options
+ifeq ($(SPATIAL_SOIL),1)
+SPATIAL_SOIL = -DSPATIAL_SOIL
+else
+SPATIAL_SOIL = 
+endif
 
-OBJS_NoahMP = module_NoahMP_hrldas_driver.o
+ifeq ($(HYDRO_REALTIME),1)
+HYDRO_REALTIME = -DHYDRO_REALTIME
+else
+HYDRO_REALTIME =
+endif
 
-OBJS = \
+ifeq ($(WRF_HYDRO),1)
+WRF_HYDRO = -DWRF_HYDRO $(HYDRO_REALTIME)
+else
+WRF_HYDRO =
+endif
+
+ifeq ($(WRF_HYDRO_RAPID),1)
+WRF_HYDRO = -DWRF_HYDRO -DWRF_HYDRO_RAPID $(HYDRO_REALTIME)
+endif
+
+ifeq ($(HYDRO_D),1)
+HYDRO_D = -DHYDRO_D $(WRF_HYDRO)
+else
+HYDRO_D =  $(WRF_HYDRO)
+endif
+
+ifeq ($(WRFIO_NCD_LARGE_FILE_SUPPORT),1)
+WRFIO_NCD_LARGE_FILE_SUPPORT = -DWRFIO_NCD_LARGE_FILE_SUPPORT
+else
+WRFIO_NCD_LARGE_FILE_SUPPORT =
+endif
+
+ifeq ($(WRF_HYDRO_NUDGING),1)
+WRF_HYDRO_NUDGING = -DWRF_HYDRO_NUDGING
+else
+WRF_HYDRO_NUDGING = 
+endif
+
+ifeq ($(OUTPUT_CHAN_CONN),1)
+OUTPUT_CHAN_CONN = -DOUTPUT_CHAN_CONN
+else
+OUTPUT_CHAN_CONN = 
+endif
+
+ifeq ($(PRECIP_DOUBLE),1)
+PRECIP_DOUBLE = -DPRECIP_DOUBLE
+else
+PRECIP_DOUBLE = 
+endif
+
+MPIFC = @MPIFC@
+FCFLAGS = @FCFLAGS@ -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
+CPP	=       cpp
+CPPFLAGS	=        -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(SPATIAL_SOIL) $(WRFIO_NCD_LARGE_FILE_SUPPORT)  $(WRF_HYDRO_NUDGING) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
+
+NETCDFINC       =       $(NETCDF_INC)
+NETCDFLIB       =       -L$(NETCDF_LIB) -lnetcdff -lnetcdf
+NETCDF_INC = /usr/include
+NETCDF_LIB = netcdf
+NETCDFLIB       =       -Lnetcdff -lnetcdff
+
+# flag from HRLDAS
+LIBJASPER       =       -ljpeg -L/scholar/kmanning/jasper/lib -ljasper
+INCJASPER       =       -I/scholar/kmanning/jasper/include
+NETCDFMOD       =       -I $(NETCDFINC)
+BZIP2           =       YES
+BZIP2_LIB       =       -lbz2
+BZIP2_INCLUDE   =       -I/usr/include
+CC              =       cc
+HYDRO_LIB = -L../../.. -lHYDRO
+
+NoahMP_objects = module_NoahMP_hrldas_driver.o
+
+objects = \
 	main_hrldas_driver.o \
 	module_hrldas_netcdf_io.o
 
 CPPHRLDAS = -D_HRLDAS_OFFLINE_ $(MOD_OPT)
 
-all:	$(OBJS_NoahMP) $(OBJS)
+all:	$(NoahMP_objects) $(objects)
 
-NoahMP : $(OBJS_NoahMP) $(OBJS)
+NoahMP : $(NoahMP_objects) $(objects)
 
-module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.F ../../../HYDRO_drv/module_HYDRO_drv.o ../../../Data_Rec/module_namelist.o ../../../Data_Rec/module_RT_data.o
-	rm -f $(*).f90
+module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.F $(addprefix ../../../,HYDRO_drv/module_HYDRO_drv.o Data_Rec/module_namelist.o Data_Rec/module_RT_data.o)
 	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(COMPILERF90) -o $(@) -c $(F90FLAGS) $(FREESOURCE) $(MODFLAG) -I. \
-	-I../phys -I../Utility_routines -I../../../mod $(NETCDFMOD) $(*).f90
+	$(MPIFC) -o $(@) -c $(FCFLAGS) -I../phys -I../Utility_routines $(addprefix -I../../../,Data_Rec Routing HYDRO_drv MPP) $(NETCDFMOD) $(*).f90
 
 main_hrldas_driver.o: main_hrldas_driver.F
-	rm -f $(*).f90
 	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(COMPILERF90) -o $(@) -c $(F90FLAGS) $(LDFLAGS) $(FREESOURCE) -I ../MPP -I. \
-	-I../phys -I../Utility_routines -I../../../mod -I../../../MPP $(NETCDFMOD) $(*).f90
-#	$(COMPILERF90) -o $(@) -c $(F90FLAGS) $(FREESOURCE) -I ../MPP -I. \
-#	-I../phys -I../Utility_routines $(NETCDFMOD) $(*).f90
+	$(MPIFC) -o $(@) -c $(FCFLAGS) -I../../../MPP $(NETCDFMOD) $(*).f90
 
 module_hrldas_netcdf_io.o: module_hrldas_netcdf_io.F
-	rm -f $(*).f90
 	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(NETCDFMOD) $(*).F > $(*).f90
-	$(COMPILERF90) -o $(@) -c $(F90FLAGS) $(FREESOURCE) -I ../MPP -I../Utility_routines $(NETCDFMOD) $(*).f90
+	$(MPIFC) -o $(@) -c $(FCFLAGS) -I../Utility_routines -I../../../MPP $(NETCDFMOD) $(*).f90
 
 .F.o:
-	rm -f $(*).f90
 	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(COMPILERF90) -o $(@) -c $(F90FLAGS) $(FREESOURCE) $(*).f90
+	$(MPIFC) -o $(@) -c $(FCFLAGS) $(*).f90
 
-main_hrldas_driver.o:	$(OBJS_NoahMP) \
-#		        ../../../nudging/module_nudging_utils.o \
-#		        ../../../nudging/module_stream_nudging.o \
-			../../../MPP/mpp_land.o \
-                        ../../../Routing/module_NWM_io.o
+main_hrldas_driver.o: $(NoahMP_objects)
 
-$(OBJS_NoahMP):	module_hrldas_netcdf_io.o
+$(NoahMP_objects): module_hrldas_netcdf_io.o
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f90
