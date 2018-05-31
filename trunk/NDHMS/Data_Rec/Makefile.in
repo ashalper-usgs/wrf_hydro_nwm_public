@@ -14,9 +14,11 @@ include ../global.mk
 
 all: $(Data_Rec_objects)
 
-.F.o:
-	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(FCFLAGS) $(NETCDF4_FFLAGS) -I../MPP $(*).f
+$(Data_Rec_objects): %.o: %.f
+	$(MPIFC) -o $@ $(FCFLAGS) $(NETCDF4_FFLAGS) -I../MPP $<
+
+%.f: %.F
+	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
