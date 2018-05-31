@@ -67,6 +67,70 @@ AC_TYPE_OFF_T
 # Checks for library functions.
 AC_CHECK_FUNCS([pow strchr strstr])
 
+AC_ARG_ENABLE(
+  [wrf-hydro],
+  AS_HELP_STRING(
+    [--disable-wrf-hydro],
+    [A WRF environment variable. Always enabled for compiling WRF-Hydro.])
+)
+AS_IF([test "x$enable_wrf-hydro" != "xno"], [WRF_HYDRO=1], [WRF_HYDRO=0])
+AC_SUBST([WRF_HYDRO])
+
+AC_ARG_ENABLE(
+  [hydro-d],
+  AS_HELP_STRING(
+    [--disable-hydro-d],
+    [Disable enhanced diagnostic output for debugging.])
+)
+AS_IF([test "x$enable_hydro-d" != "xno"], [HYDRO_D=1], [HYDRO_D=0])
+AC_SUBST([HYDRO_D])
+
+AC_ARG_ENABLE(
+  [spatial-soil],
+  AS_HELP_STRING(
+    [--enable-spatial-soil],
+    [Enable spatially distributed parameters for NoahMP.]))
+AS_IF([test "x$enable_spatial-soil" = "xyes"],
+      [SPATIAL_SOIL=1],
+      [SPATIAL_SOIL=0])
+AC_SUBST([SPATIAL_SOIL])
+
+AC_ARG_ENABLE(
+  [wrf-hydro-rapid],
+  AS_HELP_STRING(
+    [--enable-wrf-hydro-rapid],
+    [Enable RAPID model.]))
+AS_IF([test "x$enable_wrf-hydro-rapid" = "xyes"],
+      [WRF_HYDRO_RAPID=1],
+      [WRF_HYDRO_RAPID=0])
+AC_SUBST([WRF_HYDRO_RAPID])
+
+AC_ARG_ENABLE(
+  [wrfio-ncd-large-file-support],
+  AS_HELP_STRING(
+    [--disable-wrfio-ncd-large-file-support],
+    [Disable large NetCDF file support.])
+)
+AS_IF([test "x$enable_wrfio-ncd-large-file-support" != "xno"],
+      [WRFIO_NCD_LARGE_FILE_SUPPORT=1], [WRFIO_NCD_LARGE_FILE_SUPPORT=0])
+AC_SUBST([WRFIO_NCD_LARGE_FILE_SUPPORT])
+
+AC_ARG_ENABLE(
+  [ncep-wcoss],
+  AS_HELP_STRING([--enable-ncep-wcoss], [Enable WCOSS file units.])
+)
+AS_IF([test "x$enable_ncep-wcoss" = "xyes"], [NCEP_WCOSS=1], [NCEP_WCOSS=0])
+AC_SUBST([NCEP_WCOSS])
+
+AC_ARG_ENABLE(
+  [wrf-hydro-nudging],
+  AS_HELP_STRING([--enable-wrf-hydro-nudging], [Enable streamflow nudging.])
+)
+AS_IF([test "x$enable_wrf-hydro-nudging" = "xyes"],
+      [WRF_HYDRO_NUDGING=1],
+      [WRF_HYDRO_NUDGING=0])
+AC_SUBST([WRF_HYDRO_NUDGING])
+
 # TODO: un-hard-code these
 CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND -DHYDRO_D -DWRFIO_NCD_LARGE_FILE_SUPPORT"
 

@@ -625,6 +625,13 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+WRF_HYDRO_NUDGING
+NCEP_WCOSS
+WRFIO_NCD_LARGE_FILE_SUPPORT
+WRF_HYDRO_RAPID
+SPATIAL_SOIL
+HYDRO_D
+WRF_HYDRO
 EGREP
 GREP
 CPP
@@ -683,6 +690,13 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_wrf_hydro
+enable_hydro_d
+enable_spatial_soil
+enable_wrf_hydro_rapid
+enable_wrfio_ncd_large_file_support
+enable_ncep_wcoss
+enable_wrf_hydro_nudging
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1300,6 +1314,27 @@ if test -n "$ac_init_help"; then
      short | recursive ) echo "Configuration of WRF-Hydro 0.1:";;
    esac
   cat <<\_ACEOF
+
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-wrf-hydro     A WRF environment variable. Always enabled for
+                          compiling WRF-Hydro.
+
+  --disable-hydro-d       Disable enhanced diagnostic output for debugging.
+
+  --enable-spatial-soil   Enable spatially distributed parameters for NoahMP.
+  --enable-wrf-hydro-rapid
+                          Enable RAPID model.
+  --disable-wrfio-ncd-large-file-support
+                          Disable large NetCDF file support.
+
+  --enable-ncep-wcoss     Enable WCOSS file units.
+
+  --enable-wrf-hydro-nudging
+                          Enable streamflow nudging.
+
 
 Some influential environment variables:
   CC          C compiler command
@@ -4769,6 +4804,90 @@ _ACEOF
 
 fi
 done
+
+
+# Check whether --enable-wrf-hydro was given.
+if test "${enable_wrf_hydro+set}" = set; then :
+  enableval=$enable_wrf_hydro;
+fi
+
+if test "x$enable_wrf-hydro" != "xno"; then :
+  WRF_HYDRO=1
+else
+  WRF_HYDRO=0
+fi
+
+
+# Check whether --enable-hydro-d was given.
+if test "${enable_hydro_d+set}" = set; then :
+  enableval=$enable_hydro_d;
+fi
+
+if test "x$enable_hydro-d" != "xno"; then :
+  HYDRO_D=1
+else
+  HYDRO_D=0
+fi
+
+
+# Check whether --enable-spatial-soil was given.
+if test "${enable_spatial_soil+set}" = set; then :
+  enableval=$enable_spatial_soil;
+fi
+
+if test "x$enable_spatial-soil" = "xyes"; then :
+  SPATIAL_SOIL=1
+else
+  SPATIAL_SOIL=0
+fi
+
+
+# Check whether --enable-wrf-hydro-rapid was given.
+if test "${enable_wrf_hydro_rapid+set}" = set; then :
+  enableval=$enable_wrf_hydro_rapid;
+fi
+
+if test "x$enable_wrf-hydro-rapid" = "xyes"; then :
+  WRF_HYDRO_RAPID=1
+else
+  WRF_HYDRO_RAPID=0
+fi
+
+
+# Check whether --enable-wrfio-ncd-large-file-support was given.
+if test "${enable_wrfio_ncd_large_file_support+set}" = set; then :
+  enableval=$enable_wrfio_ncd_large_file_support;
+fi
+
+if test "x$enable_wrfio-ncd-large-file-support" != "xno"; then :
+  WRFIO_NCD_LARGE_FILE_SUPPORT=1
+else
+  WRFIO_NCD_LARGE_FILE_SUPPORT=0
+fi
+
+
+# Check whether --enable-ncep-wcoss was given.
+if test "${enable_ncep_wcoss+set}" = set; then :
+  enableval=$enable_ncep_wcoss;
+fi
+
+if test "x$enable_ncep-wcoss" = "xyes"; then :
+  NCEP_WCOSS=1
+else
+  NCEP_WCOSS=0
+fi
+
+
+# Check whether --enable-wrf-hydro-nudging was given.
+if test "${enable_wrf_hydro_nudging+set}" = set; then :
+  enableval=$enable_wrf_hydro_nudging;
+fi
+
+if test "x$enable_wrf-hydro-nudging" = "xyes"; then :
+  WRF_HYDRO_NUDGING=1
+else
+  WRF_HYDRO_NUDGING=0
+fi
 
 
 # TODO: un-hard-code these
