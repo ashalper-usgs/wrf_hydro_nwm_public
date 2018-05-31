@@ -4,7 +4,7 @@
 .SUFFIXES: .o .F
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@ -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
+FCFLAGS = @FCFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
