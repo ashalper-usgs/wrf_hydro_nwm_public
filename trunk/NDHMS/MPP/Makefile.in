@@ -3,7 +3,13 @@
 .SUFFIXES:
 .SUFFIXES: .o .F
 
+WRF_HYDRO = @WRF_HYDRO@
 HYDRO_D = @HYDRO_D@
+SPATIAL_SOIL = @SPATIAL_SOIL@
+WRF_HYDRO_RAPID = @WRF_HYDRO_RAPID@
+WRFIO_NCD_LARGE_FILE_SUPPORT = @WRFIO_NCD_LARGE_FILE_SUPPORT@
+NCEP_WCOSS = @NCEP_WCOSS@
+WRF_HYDRO_NUDGING = @WRF_HYDRO_NUDGING@
 
 MPIFC = @MPIFC@
 # the supplemental flags below might not be necessary for non-gfortran
@@ -18,21 +24,17 @@ all: $(OBJS)
 
 mpp_land.o: mpp_land.F
 	$(MPIFC) $(FCFLAGS) $(*).F
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 CPL_WRF.o: CPL_WRF.F
 	$(CPP) $(CPPFLAGS) $(*).F > $(*).f
 	$(MPIFC) -o $(@) $(FCFLAGS) $(*).f
 	$(MPIFC) $(FCFLAGS) $(*).F
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_ReachLS.o: module_mpp_ReachLS.F
 	$(MPIFC) $(FCFLAGS) $(*).F
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
 	$(MPIFC) $(FCFLAGS) $(*).F
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
 
 clean:
 	rm -f *.o *.mod *.f *.stb *~
