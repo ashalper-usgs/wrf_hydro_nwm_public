@@ -69,7 +69,7 @@ AC_TYPE_OFF_T
 AC_CHECK_FUNCS([pow strchr strstr])
 
 # TODO: try to replace with macros if possible
-CPPFLAGS="-P -xassembler-with-cpp -traditional"
+CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND"
 FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
 
 AC_ARG_ENABLE(
