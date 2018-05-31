@@ -68,21 +68,9 @@ NETCDF_INC = /usr/include
 NETCDF_LIB = netcdf
 NETCDFLIB = -Lnetcdff -lnetcdff
 
-objects = \
-	module_date_utilities_rt.o \
-	module_UDMAP.o \
-	module_HYDRO_utils.o \
-	module_noah_chan_param_init_rt.o \
-	module_GW_baseflow.o \
-	module_gw_gw2d.o \
-	module_HYDRO_io.o \
-	module_RT.o \
-	Noah_distr_routing.o \
-	module_channel_routing.o \
-	module_lsm_forcing.o \
-	module_date_utilities_rt.o \
-	module_NWM_io_dict.o \
-	module_NWM_io.o
+include ../global.mk
+
+objects = $(Routing_objects)
 
 all: $(objects)
 
