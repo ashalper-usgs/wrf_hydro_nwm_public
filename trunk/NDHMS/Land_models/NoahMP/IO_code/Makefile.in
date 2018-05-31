@@ -3,6 +3,16 @@
 .SUFFIXES:
 .SUFFIXES: .o .F
 
+# TODO: replace RH side below with Autconf substitutions.
+
+WRF_HYDRO = 1
+HYDRO_D = 1
+SPATIAL_SOIL = 0  
+WRF_HYDRO_RAPID = 0
+WRFIO_NCD_LARGE_FILE_SUPPORT = 1
+NCEP_WCOSS = 0
+WRF_HYDRO_NUDGING = 0
+
 ifeq ($(SPATIAL_SOIL),1)
 SPATIAL_SOIL = -DSPATIAL_SOIL
 else
