@@ -3,31 +3,6 @@
 .SUFFIXES:
 .SUFFIXES: .o .F
 
-# TODO: replace RH side of assignments below with Autoconf macro
-# substitutions.
-
-# This is a WRF environment variable. Always set to 1 = On for
-# compiling WRF-Hydro.
-WRF_HYDRO = 1
-
-# Enhanced diagnostic output for debugging: 0 = Off, 1 = On.
-HYDRO_D = 1
-
-# Spatially distributed parameters for NoahMP: 0 = Off, 1 = On.
-SPATIAL_SOIL = 0  
-
-# RAPID model: 0 = Off, 1 = On.
-WRF_HYDRO_RAPID = 0
-
-# Large netcdf file support: 0 = Off, 1 = On.
-WRFIO_NCD_LARGE_FILE_SUPPORT = 1
-
-# WCOSS file units: 0 = Off, 1 = On. 
-NCEP_WCOSS = 0
-
-# Streamflow nudging: 0 = Off, 1 = On.
-WRF_HYDRO_NUDGING = 0
-
 ifeq ($(SPATIAL_SOIL),1)
 SPATIAL_SOIL = -DSPATIAL_SOIL
 else
@@ -81,9 +56,8 @@ PRECIP_DOUBLE =
 endif
 
 MPIFC = @MPIFC@
-F90FLAGS = -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4
+FCFLAGS = @FCFLAGS@ -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4
 MODFLAG	= -I../Data_Rec -I../MPP
-LDFLAGS	=	
 CPP = @CPP@
 CPPFLAGS = -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(SPATIAL_SOIL) $(WRFIO_NCD_LARGE_FILE_SUPPORT)  $(WRF_HYDRO_NUDGING) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
 
@@ -94,7 +68,7 @@ NETCDF_INC = /usr/include
 NETCDF_LIB = netcdf
 NETCDFLIB = -Lnetcdff -lnetcdff
 
-OBJS = \
+objects = \
 	module_date_utilities_rt.o \
 	module_UDMAP.o \
 	module_HYDRO_utils.o \
@@ -110,11 +84,11 @@ OBJS = \
 	module_NWM_io_dict.o \
 	module_NWM_io.o
 
-all:	$(OBJS)
+all: $(objects)
 
 .F.o:
 	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(F90FLAGS) $(LDFLAGS) $(MODFLAG) -I$(NETCDFINC) $(*).f
+	$(MPIFC) -o $(@) $(FCFLAGS) $(MODFLAG) -I$(NETCDFINC) $(*).f
 # TODO:	ar -r ../lib/libHYDRO.a $(@)
 # TODO:	cp *.mod ../mod
 
