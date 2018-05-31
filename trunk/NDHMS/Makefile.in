@@ -2,8 +2,7 @@
 
 .PHONY: all BASIC clean
 
-# TODO: replace with Autoconf macro substitution.
-WRF_HYDRO_RAPID = 0
+WRF_HYDRO_RAPID = @WRF_HYDRO_RAPID@
 
 include global.mk
 
