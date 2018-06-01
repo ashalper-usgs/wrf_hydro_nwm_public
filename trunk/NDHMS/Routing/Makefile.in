@@ -1,8 +1,5 @@
 # Makefile.in
 
-.SUFFIXES:
-.SUFFIXES: .o .F
-
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
 CPP = @CPP@
@@ -16,83 +13,68 @@ include ../global.mk
 
 objects = $(Routing_objects)
 
-all: $(objects)
+all: libRouting.a
 
-.F.o:
-	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(FCFLAGS) $(MODINC) $(NETCDF4_FFLAGS) $(*).f
-# TODO:	ar -r ../lib/libHYDRO.a $(@)
-# TODO:	cp *.mod ../mod
+libRouting.a: $(objects)
+	ar -r $@ $?
 
-module_gw_gw2d.o: ../Data_Rec/module_gw_gw2d_data.o module_HYDRO_io.o module_gw_gw2d.f
-	$(MPIFC) -o $(@) $(FCFLAGS) -I$(dir $<) $(*).f
+$(objects): %.o: %.f
+	$(MPIFC) -o $@ $(FCFLAGS) $(MODINC) $(NETCDF4_FFLAGS) $<
 
-module_gw_gw2d.f: module_gw_gw2d.F
-	$(CPP) $(CPPFLAGS) -I../Data_Rec $< > $@
+%.f: %.F
+	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(MODINC) $< > $@
 
 ifneq ($(WRF_HYDRO_NUDGING),1)
-module_HYDRO_io.o:  module_HYDRO_utils.o \
-	            module_date_utilities_rt.o \
-                    ../Data_Rec/module_namelist.o \
-	 	    ../Data_Rec/module_RT_data.o 
+module_HYDRO_io.o: module_HYDRO_utils.o module_date_utilities_rt.o	\
+	            ../Data_Rec/module_namelist.o			\
+	            ../Data_Rec/module_RT_data.o
 else 
-module_HYDRO_io.o:  module_HYDRO_utils.o \
-	            module_date_utilities_rt.o \
-		    ../nudging/module_date_utils_nudging.o \
-	            ../nudging/module_nudging_io.o \
-                    ../Data_Rec/module_namelist.o \
-	 	    ../Data_Rec/module_RT_data.o 
+module_HYDRO_io.o: module_HYDRO_utils.o module_date_utilities_rt.o	\
+	            ../nudging/module_date_utils_nudging.o		\
+	            ../nudging/module_nudging_io.o			\
+	            ../Data_Rec/module_namelist.o			\
+	            ../Data_Rec/module_RT_data.o
 endif
 
-module_NWM_io_dict: ../Data_Rec/module_namelist.o
+module_NWM_io_dict.o: ../Data_Rec/module_namelist.o
 
-module_NWM_io: module_HYDRO_utils.o \
-               module_NWM_io_dict.o \
-               module_HYDRO_io.o \
-               module_date_utilities_rt.o \
-               ../Data_Rec/module_namelist.o \
+module_NWM_io.o: module_HYDRO_utils.o module_NWM_io_dict.o	\
+               module_HYDRO_io.o module_date_utilities_rt.o	\
+               ../Data_Rec/module_namelist.o			\
                ../Data_Rec/module_RT_data.o
 
-module_HYDRO_utils.o: ../Data_Rec/module_namelist.o ../Data_Rec/module_RT_data.o
+module_HYDRO_utils.o: $(addprefix ../Data_Rec/,module_namelist.o module_RT_data.o)
 
 module_lsm_forcing.o: module_HYDRO_io.o 
 
 ifneq ($(WRF_HYDRO_NUDGING),1)
-module_RT.o: module_GW_baseflow.o \
-	     module_HYDRO_utils.o \
-             module_HYDRO_io.o \
-             module_noah_chan_param_init_rt.o \
-	     module_UDMAP.o \
-	     ../Data_Rec/module_namelist.o \
-	     ../Data_Rec/module_RT_data.o \
+module_RT.o: module_GW_baseflow.o module_HYDRO_utils.o		\
+	     module_HYDRO_io.o module_noah_chan_param_init_rt.o	\
+	     module_UDMAP.o ../Data_Rec/module_namelist.o	\
+	     ../Data_Rec/module_RT_data.o			\
 	     ../Data_Rec/module_gw_gw2d_data.o
 else
-module_RT.o: module_GW_baseflow.o \
-	     module_HYDRO_utils.o \
-             module_HYDRO_io.o \
-             module_noah_chan_param_init_rt.o \
-	     module_UDMAP.o \
-	     ../Data_Rec/module_namelist.o \
-	     ../Data_Rec/module_RT_data.o \
-	     ../Data_Rec/module_gw_gw2d_data.o \
-             ../nudging/module_date_utils_nudging.o \
-             ../nudging/module_nudging_io.o
+module_RT.o: module_GW_baseflow.o module_HYDRO_utils.o		\
+	     module_HYDRO_io.o module_noah_chan_param_init_rt.o	\
+	     module_UDMAP.o ../Data_Rec/module_namelist.o	\
+	     ../Data_Rec/module_RT_data.o			\
+	     ../Data_Rec/module_gw_gw2d_data.o			\
+	     ../nudging/module_date_utils_nudging.o		\
+	     ../nudging/module_nudging_io.o
 endif
 
-module_GW_baseflow.o: module_GW_baseflow.F
-	$(CPP) $(CPPFLAGS) -I../Data_Rec $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(FCFLAGS) $(*).f
+module_GW_baseflow.o: module_UDMAP.o
 
-module_UDMAP.o: ../Data_Rec/module_namelist.o ../Data_Rec/module_RT_data.o
+module_UDMAP.o: $(addprefix ../Data_Rec/,module_namelist.o module_RT_data.o)
 
 ifneq ($(WRF_HYDRO_NUDGING),1)
 module_channel_routing.o: module_UDMAP.o
 else
-module_channel_routing.o: module_UDMAP.o\
-			  ../nudging/module_date_utils_nudging.o \
-		          ../nudging/module_nudging_utils.o \
-		  ../nudging/module_stream_nudging.o
+module_channel_routing.o: module_UDMAP.o $(addprefix ../nudging/,	\
+                          module_date_utils_nudging.o			\
+                          module_nudging_utils.o			\
+                          module_stream_nudging.o)
 endif
 
 clean:	
-	rm -f *.o *.mod *.stb *~ *.f
+	rm -f *.o *.mod *.stb *~ *.f libRouting.a
