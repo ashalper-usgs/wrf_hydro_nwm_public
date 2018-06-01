@@ -21,5 +21,3 @@ Routing_objects = $(addsuffix .o,\
    module_lsm_forcing \
    module_noah_chan_param_init_rt \
 )
-
-HYDRO_drv_objects = $(addsuffix .o,module_HYDRO_drv)
