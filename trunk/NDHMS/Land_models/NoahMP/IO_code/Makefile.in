@@ -1,122 +1,45 @@
 # Makefile.in
 
-.SUFFIXES:
-.SUFFIXES: .o .F
-
-# TODO: replace RH side below with Autconf substitutions.
-
-WRF_HYDRO = 1
-HYDRO_D = 1
-SPATIAL_SOIL = 0  
-WRF_HYDRO_RAPID = 0
-WRFIO_NCD_LARGE_FILE_SUPPORT = 1
-NCEP_WCOSS = 0
-WRF_HYDRO_NUDGING = 0
-
-ifeq ($(SPATIAL_SOIL),1)
-SPATIAL_SOIL = -DSPATIAL_SOIL
-else
-SPATIAL_SOIL = 
-endif
-
-ifeq ($(HYDRO_REALTIME),1)
-HYDRO_REALTIME = -DHYDRO_REALTIME
-else
-HYDRO_REALTIME =
-endif
-
-ifeq ($(WRF_HYDRO),1)
-WRF_HYDRO = -DWRF_HYDRO $(HYDRO_REALTIME)
-else
-WRF_HYDRO =
-endif
-
-ifeq ($(WRF_HYDRO_RAPID),1)
-WRF_HYDRO = -DWRF_HYDRO -DWRF_HYDRO_RAPID $(HYDRO_REALTIME)
-endif
-
-ifeq ($(HYDRO_D),1)
-HYDRO_D = -DHYDRO_D $(WRF_HYDRO)
-else
-HYDRO_D =  $(WRF_HYDRO)
-endif
-
-ifeq ($(WRFIO_NCD_LARGE_FILE_SUPPORT),1)
-WRFIO_NCD_LARGE_FILE_SUPPORT = -DWRFIO_NCD_LARGE_FILE_SUPPORT
-else
-WRFIO_NCD_LARGE_FILE_SUPPORT =
-endif
-
-ifeq ($(WRF_HYDRO_NUDGING),1)
-WRF_HYDRO_NUDGING = -DWRF_HYDRO_NUDGING
-else
-WRF_HYDRO_NUDGING = 
-endif
-
-ifeq ($(OUTPUT_CHAN_CONN),1)
-OUTPUT_CHAN_CONN = -DOUTPUT_CHAN_CONN
-else
-OUTPUT_CHAN_CONN = 
-endif
-
-ifeq ($(PRECIP_DOUBLE),1)
-PRECIP_DOUBLE = -DPRECIP_DOUBLE
-else
-PRECIP_DOUBLE = 
-endif
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@ -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4 
-CPP	=       cpp
-CPPFLAGS	=        -P -xassembler-with-cpp -traditional -DMPP_LAND -I../Data_Rec $(HYDRO_D) $(SPATIAL_SOIL) $(WRFIO_NCD_LARGE_FILE_SUPPORT)  $(WRF_HYDRO_NUDGING) $(OUTPUT_CHAN_CONN) $(PRECIP_DOUBLE)
-
-NETCDFINC       =       $(NETCDF_INC)
-NETCDFLIB       =       -L$(NETCDF_LIB) -lnetcdff -lnetcdf
-NETCDF_INC = /usr/include
-NETCDF_LIB = netcdf
-NETCDFLIB       =       -Lnetcdff -lnetcdff
-
-# flag from HRLDAS
-LIBJASPER       =       -ljpeg -L/scholar/kmanning/jasper/lib -ljasper
-INCJASPER       =       -I/scholar/kmanning/jasper/include
-NETCDFMOD       =       -I $(NETCDFINC)
-BZIP2           =       YES
-BZIP2_LIB       =       -lbz2
-BZIP2_INCLUDE   =       -I/usr/include
-CC              =       cc
-HYDRO_LIB = -L../../.. -lHYDRO
+FCFLAGS = @FCFLAGS@
 
 NoahMP_objects = module_NoahMP_hrldas_driver.o
 
-objects = \
-	main_hrldas_driver.o \
-	module_hrldas_netcdf_io.o
+objects = main_hrldas_driver.o module_hrldas_netcdf_io.o
 
-CPPHRLDAS = -D_HRLDAS_OFFLINE_ $(MOD_OPT)
+all NoahMP: $(NoahMP_objects) $(objects)
 
-all:	$(NoahMP_objects) $(objects)
+$(objects): %.o: %.f90
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 
-NoahMP : $(NoahMP_objects) $(objects)
+module_hrldas_netcdf_io.o: %.o: %.f90
+	$(MPIFC) -o $@ $(FCFLAGS) \
+        $(addprefix -I../../../,Land_models/NoahMP/Utility_routines MPP) $<
 
-module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.F $(addprefix ../../../,HYDRO_drv/module_HYDRO_drv.o Data_Rec/module_namelist.o Data_Rec/module_RT_data.o)
-	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(MPIFC) -o $(@) -c $(FCFLAGS) -I../phys -I../Utility_routines $(addprefix -I../../../,Data_Rec Routing HYDRO_drv MPP) $(NETCDFMOD) $(*).f90
+# TODO: might make things easier to build this at a higher directory
+# level. Also, dependencies might not be correct.
+module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.F \
+                               $(addprefix ../../../,HYDRO_drv/module_HYDRO_drv.o	\
+                                 $(addprefix Data_Rec/,module_namelist.o module_RT_data.o))
+	$(MPIFC) -o $@ $(FCFLAGS) \
+        $(addprefix -I, \
+          $(addprefix ../../../, \
+            $(addprefix Land_models/NoahMP/,phys Utility_routines) HYDRO_drv Data_Rec Routing)) \
+        $?
 
 main_hrldas_driver.o: main_hrldas_driver.F
-	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(MPIFC) -o $(@) -c $(FCFLAGS) -I../../../MPP $(NETCDFMOD) $(*).f90
 
 module_hrldas_netcdf_io.o: module_hrldas_netcdf_io.F
-	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(NETCDFMOD) $(*).F > $(*).f90
-	$(MPIFC) -o $(@) -c $(FCFLAGS) -I../Utility_routines -I../../../MPP $(NETCDFMOD) $(*).f90
-
-.F.o:
-	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(MPIFC) -o $(@) -c $(FCFLAGS) $(*).f90
 
 main_hrldas_driver.o: $(NoahMP_objects)
 
 $(NoahMP_objects): module_hrldas_netcdf_io.o
+
+%.f90: %.F
+	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(MODINC) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f90
