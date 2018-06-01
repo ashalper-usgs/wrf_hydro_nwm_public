@@ -1,8 +1,5 @@
 # Makefile.in
 
-.SUFFIXES:
-.SUFFIXES: .o .F
-
 WRF_HYDRO = @WRF_HYDRO@
 HYDRO_D = @HYDRO_D@
 SPATIAL_SOIL = @SPATIAL_SOIL@
@@ -14,27 +11,21 @@ WRF_HYDRO_NUDGING = @WRF_HYDRO_NUDGING@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 MPIFC = @MPIFC@
-# the supplemental flags below might not be necessary for non-gfortran
-# pedigree compilers
-FCFLAGS = @FCFLAGS@ -w -c -ffree-form
+FCFLAGS = @FCFLAGS@
 
-OBJS = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o module_mpp_GWBUCKET.o
+objects = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o	\
+          module_mpp_GWBUCKET.o
 
-all: $(OBJS)
+all: libMPP.a
 
-mpp_land.o: mpp_land.F
-	$(MPIFC) $(FCFLAGS) $(*).F
+libMPP.a: $(objects)
+	ar -r $@ $?
 
-CPL_WRF.o: CPL_WRF.F
-	$(CPP) $(CPPFLAGS) $(*).F > $(*).f
-	$(MPIFC) -o $(@) $(FCFLAGS) $(*).f
-	$(MPIFC) $(FCFLAGS) $(*).F
+$(objects): %.o: %.f
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 
-module_mpp_ReachLS.o: module_mpp_ReachLS.F
-	$(MPIFC) $(FCFLAGS) $(*).F
-
-module_mpp_GWBUCKET.o: module_mpp_GWBUCKET.F
-	$(MPIFC) $(FCFLAGS) $(*).F
+%.f: %.F
+	$(CPP) $(CPPFLAGS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.f *.stb *~
+	rm -f *.o *.mod *.f *.stb *~ libMPP.a
