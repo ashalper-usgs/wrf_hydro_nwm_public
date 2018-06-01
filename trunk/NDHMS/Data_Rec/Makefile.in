@@ -2,21 +2,26 @@
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
-NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
-NETCDF4_FFLAGS = @NETCDF4_FFLAGS@
 
-include ../global.mk
+objects = $(addsuffix .o,\
+  module_namelist module_RT_data module_gw_gw2d_data)
 
 all: libData_Rec.a
 
-libData_Rec.a: $(Data_Rec_objects)
+libData_Rec.a: $(objects)
 	ar -r $@ $?
 
-$(Data_Rec_objects): %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) $(NETCDF4_FFLAGS) -I../MPP $<
+module_namelist.o: module_namelist.f
+	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP $<
+
+module_RT_data.o: module_RT_data.f
+	$(MPIFC) -o $@ $(FCFLAGS) -I../Routing/Overland $<
+
+module_gw_gw2d_data.o: module_gw_gw2d_data.f
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 
 %.f: %.F
 	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $< > $@
