@@ -1,37 +1,27 @@
-# Makefile 
-#
-.SUFFIXES:
-.SUFFIXES: .o .F
+# Makefile.in
 
-include ../user_build_options
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
 
-OBJS = \
-	module_sf_noahmpdrv.o \
-	module_sf_noahmplsm.o \
-	module_sf_noahmp_glacier.o \
-	module_sf_noahmp_groundwater.o
+MPIFC = @MPIFC@
+FCFLAGS = @FCFLAGS@
 
-CPPHRLDAS = -D_HRLDAS_OFFLINE_
+objects = module_sf_noahmpdrv.o module_sf_noahmplsm.o			\
+          module_sf_noahmp_glacier.o module_sf_noahmp_groundwater.o
 
-all:	$(OBJS)
+all:	$(objects)
 
-.F.o:
-	@echo ""
-	$(RM) $(*).f90
-	$(CPP) $(CPPFLAGS) $(CPPHRLDAS) $(*).F > $(*).f90
-	$(COMPILERF90) -o $(@) -c -I../Utility_routines $(F90FLAGS) $(LDFLAGS) $(FREESOURCE) $(*).f90
-	@echo ""
+$(objects): %.o: %.f90
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 
-#
-# Dependencies:
-#
-module_sf_noahmpdrv.o:	module_sf_noahmplsm.o module_sf_noahmp_glacier.o module_sf_noahmp_groundwater.o
+%.f90: %.F
+	$(CPP) $(CPPFLAGS) $< > $@
+
+module_sf_noahmpdrv.o: module_sf_noahmplsm.o		\
+                       module_sf_noahmp_glacier.o	\
+                       module_sf_noahmp_groundwater.o
+
 module_sf_noahmp_groundwater.o: module_sf_noahmplsm.o
 
-#
-# This command cleans up object (etc) files:
-#
-
 clean:
-	$(RM) *.o *.mod *.stb *~ *.f90
-
+	rm -f *.o *.mod *.stb *~ *.f90
