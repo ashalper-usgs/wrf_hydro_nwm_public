@@ -1,0 +1,131 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `bz2' library (-lbz2). */
+#undef HAVE_LIBBZ2
+
+/* Define to 1 if you have the `g2c' library (-lg2c). */
+#undef HAVE_LIBG2C
+
+/* Define to 1 if you have the `hdf5' library (-lhdf5). */
+#undef HAVE_LIBHDF5
+
+/* Define to 1 if you have the `hdf5_hl' library (-lhdf5_hl). */
+#undef HAVE_LIBHDF5_HL
+
+/* Define to 1 if you have the `HYDRO' library (-lHYDRO). */
+#undef HAVE_LIBHYDRO
+
+/* Define to 1 if you have the `m' library (-lm). */
+#undef HAVE_LIBM
+
+/* Define to 1 if you have the `ncarg' library (-lncarg). */
+#undef HAVE_LIBNCARG
+
+/* Define to 1 if you have the `ncarg_c' library (-lncarg_c). */
+#undef HAVE_LIBNCARG_C
+
+/* Define to 1 if you have the `ncarg_gks' library (-lncarg_gks). */
+#undef HAVE_LIBNCARG_GKS
+
+/* Define to 1 if you have the `netcdf' library (-lnetcdf). */
+#undef HAVE_LIBNETCDF
+
+/* Define to 1 if you have the `pgc' library (-lpgc). */
+#undef HAVE_LIBPGC
+
+/* Define to 1 if you have the `pgftnrtl' library (-lpgftnrtl). */
+#undef HAVE_LIBPGFTNRTL
+
+/* Define to 1 if you have the `rapid' library (-lrapid). */
+#undef HAVE_LIBRAPID
+
+/* Define to 1 if you have the `smda' library (-lsmda). */
+#undef HAVE_LIBSMDA
+
+/* Define to 1 if you have the `t' library (-lt). */
+#undef HAVE_LIBT
+
+/* Define to 1 if you have the `X11' library (-lX11). */
+#undef HAVE_LIBX11
+
+/* Define to 1 if you have the `Xext' library (-lXext). */
+#undef HAVE_LIBXEXT
+
+/* Define to 1 if you have the `z' library (-lz). */
+#undef HAVE_LIBZ
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define if you have the MPI library. */
+#undef HAVE_MPI
+
+/* Defined if you have NETCDF4 support */
+#undef HAVE_NETCDF4
+
+/* Define to 1 if you have the `pow' function. */
+#undef HAVE_POW
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strchr' function. */
+#undef HAVE_STRCHR
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strstr' function. */
+#undef HAVE_STRSTR
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to the type of a signed integer type of width exactly 64 bits if
+   such a type exists and the standard includes do not define it. */
+#undef int64_t
+
+/* Define to `long int' if <sys/types.h> does not define. */
+#undef off_t
