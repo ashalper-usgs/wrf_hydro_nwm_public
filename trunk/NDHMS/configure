@@ -3165,7 +3165,7 @@ ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_fc_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  for ac_prog in gfortran
+  for ac_prog in ifort gfortran
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -3209,7 +3209,7 @@ fi
 fi
 if test -z "$FC"; then
   ac_ct_FC=$FC
-  for ac_prog in gfortran
+  for ac_prog in ifort gfortran
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5464,7 +5464,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files CPL/CLM_cpl/Makefile CPL/LIS_cpl/Makefile CPL/NUOPC_cpl/Makefile CPL/NoahMP_cpl/Makefile CPL/Noah_cpl/Makefile CPL/WRF_cpl/Makefile Data_Rec/Makefile HYDRO_drv/Makefile Land_models/Noah/GRAPHICS/HORIZ/Makefile Land_models/Noah/GRAPHICS/TIME_SERIES/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/lib/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/run/Makefile Land_models/Noah/IO_code/Makefile Land_models/Noah/Makefile Land_models/Noah/Noah/Makefile Land_models/Noah/Run/Makefile Land_models/Noah/Utility_programs/Makefile Land_models/Noah/Utility_programs/gcip_sw_to_grib/Makefile Land_models/Noah/Utility_routines/Makefile Land_models/Noah/VERIFICATION/Fluxes_statistics/Makefile Land_models/Noah/VERIFICATION/OKMeso_statistics/Makefile Land_models/NoahMP/HRLDAS_forcing/Makefile Land_models/NoahMP/HRLDAS_forcing/lib/Makefile Land_models/NoahMP/HRLDAS_forcing/run/Makefile Land_models/NoahMP/IO_code/Makefile Land_models/NoahMP/Makefile Land_models/NoahMP/Utility_routines/Makefile Land_models/NoahMP/phys/Makefile Land_models/NoahMP/run/Makefile MPP/Makefile Makefile Rapid_routing/Makefile Routing/Makefile nudging/Makefile"
+ac_config_files="$ac_config_files CPL/CLM_cpl/Makefile CPL/LIS_cpl/Makefile CPL/NUOPC_cpl/Makefile CPL/NoahMP_cpl/Makefile CPL/Noah_cpl/Makefile CPL/WRF_cpl/Makefile Data_Rec/Makefile HYDRO_drv/Makefile Land_models/Noah/GRAPHICS/HORIZ/Makefile Land_models/Noah/GRAPHICS/TIME_SERIES/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/lib/Makefile Land_models/Noah/HRLDAS_COLLECT_DATA/run/Makefile Land_models/Noah/IO_code/Makefile Land_models/Noah/Makefile Land_models/Noah/Noah/Makefile Land_models/Noah/Run/Makefile Land_models/Noah/Utility_programs/Makefile Land_models/Noah/Utility_programs/gcip_sw_to_grib/Makefile Land_models/Noah/Utility_routines/Makefile Land_models/Noah/VERIFICATION/Fluxes_statistics/Makefile Land_models/Noah/VERIFICATION/OKMeso_statistics/Makefile Land_models/NoahMP/HRLDAS_forcing/Makefile Land_models/NoahMP/HRLDAS_forcing/lib/Makefile Land_models/NoahMP/HRLDAS_forcing/run/Makefile Land_models/NoahMP/IO_code/Makefile Land_models/NoahMP/Makefile Land_models/NoahMP/Utility_routines/Makefile Land_models/NoahMP/phys/Makefile Land_models/NoahMP/run/Makefile MPP/Makefile Makefile Rapid_routing/Makefile Routing/Makefile Routing/Overland/Makefile nudging/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6191,6 +6191,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "Rapid_routing/Makefile") CONFIG_FILES="$CONFIG_FILES Rapid_routing/Makefile" ;;
     "Routing/Makefile") CONFIG_FILES="$CONFIG_FILES Routing/Makefile" ;;
+    "Routing/Overland/Makefile") CONFIG_FILES="$CONFIG_FILES Routing/Overland/Makefile" ;;
     "nudging/Makefile") CONFIG_FILES="$CONFIG_FILES nudging/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

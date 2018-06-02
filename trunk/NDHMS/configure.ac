@@ -12,7 +12,7 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CC
 CPP=cpp				# gcc -E doesn't work right now
-AC_PROG_FC([gfortran], [Fortran 90])
+AC_PROG_FC([ifort gfortran], [Fortran 90])
 AC_LANG_PUSH([Fortran])
 AX_MPI				# MPI (Message Passing Interface) compiler
 AC_LANG_POP([Fortran])
@@ -181,5 +181,6 @@ AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  Makefile
                  Rapid_routing/Makefile
                  Routing/Makefile
+                 Routing/Overland/Makefile
                  nudging/Makefile])
 AC_OUTPUT
