@@ -1,0 +1,29 @@
+# Makefile.in
+
+# simple compilation test for modules in overland routing
+
+include ../../macros
+
+FC = @FC@
+FFLAGS = @FFLAGS@
+
+.PHONY: all mod test
+
+all: libOverland.a
+
+objects = \
+  $(addsuffix .o,
+    $(addprefix module_overland_,control streams_and_lakes	\
+	routing_properties mass_balance) module_overland)
+
+libOverland.a: $(objects)
+
+$(objects): %.o: %.F
+	$(FC) $<
+
+test:
+	$(FC) $(FFLAGS) overland_tests.F
+	$(FC) -o overland_tests $(objects) overland_tests.o
+
+clean:
+	rm -f *.o *.mod overland_tests
