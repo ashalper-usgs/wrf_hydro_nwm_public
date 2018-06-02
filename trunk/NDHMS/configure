@@ -3165,7 +3165,7 @@ ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_fc_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  for ac_prog in ifort gfortran
+  for ac_prog in pgfortran gfortran ifort
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -3209,7 +3209,7 @@ fi
 fi
 if test -z "$FC"; then
   ac_ct_FC=$FC
-  for ac_prog in ifort gfortran
+  for ac_prog in pgfortran gfortran ifort
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3608,6 +3608,18 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+if test "x$FC" = "xpgfortran"; then :
+  FCFLAGS="$FCFLAGS -Mfree -c -byteswapio -O2 -Kieee"
+
+fi
+if test "x$FC" = "xgfortran"; then :
+  FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
+
+fi
+if test "x$FC" = "xifort"; then :
+  FCFLAGS="$FCFLAGS -w -c -ftz -align all -fno-alias -fp-model precise \$(FORMAT_FREE) \$(BYTESWAPIO)"
+
+fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ln -s works" >&5
 $as_echo_n "checking whether ln -s works... " >&6; }
 LN_S=$as_ln_s
@@ -5366,7 +5378,6 @@ done
 
 # TODO: try to replace with macros if possible
 CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND"
-FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
 
 # Check whether --enable-wrf-hydro was given.
 if test "${enable_wrf_hydro+set}" = set; then :

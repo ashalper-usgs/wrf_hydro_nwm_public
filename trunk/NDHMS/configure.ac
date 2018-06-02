@@ -12,10 +12,22 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CC
 CPP=cpp				# gcc -E doesn't work right now
-AC_PROG_FC([ifort gfortran], [Fortran 90])
+AC_PROG_FC([pgfortran gfortran ifort], [Fortran 90])
 AC_LANG_PUSH([Fortran])
 AX_MPI				# MPI (Message Passing Interface) compiler
 AC_LANG_POP([Fortran])
+AS_IF(
+  [test "x$FC" = "xpgfortran"],
+  [FCFLAGS="$FCFLAGS -Mfree -c -byteswapio -O2 -Kieee"]
+)
+AS_IF(
+  [test "x$FC" = "xgfortran"],
+  [FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"]
+)
+AS_IF(
+  [test "x$FC" = "xifort"],
+  [FCFLAGS="$FCFLAGS -w -c -ftz -align all -fno-alias -fp-model precise \$(FORMAT_FREE) \$(BYTESWAPIO)"]
+)
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
@@ -70,7 +82,6 @@ AC_CHECK_FUNCS([pow strchr strstr])
 
 # TODO: try to replace with macros if possible
 CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND"
-FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"
 
 AC_ARG_ENABLE(
   [wrf-hydro],
