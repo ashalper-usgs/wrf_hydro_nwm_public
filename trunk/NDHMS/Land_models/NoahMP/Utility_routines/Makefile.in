@@ -2,6 +2,7 @@
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
+DEFS = @DEFS@
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
@@ -15,7 +16,7 @@ $(objects): %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
 %.f90: %.F
-	$(CPP) $(CPPFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f90
