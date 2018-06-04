@@ -2,7 +2,7 @@
 
 .PHONY: all BASIC clean
 
-WRF_HYDRO_RAPID = @WRF_HYDRO_RAPID@
+DEFS = @DEFS@
 
 include global.mk
 
@@ -13,10 +13,12 @@ all: libHYDRO.a
 	if [ -d "LandModel_cpl" ]; then \
 	   (cd LandModel_cpl; make); \
 	fi
-	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
+	if [ "$(findstring -DWRF_HYDRO_RAPID=1,$(DEFS))" = \
+	     "-DWRF_HYDRO_RAPID=1" ]; then \
 	   (cd lib; rm -f librapid.a); \
 	fi
-	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
+	if [ "$(findstring -DWRF_HYDRO_RAPID=1,$(DEFS))" = \
+             "-DWRF_HYDRO_RAPID=1" ]; then \
 	   (cd Rapid_routing; make -f makefile.cpl rapid); \
 	fi
 	if [ -d "LandModel" ]; then \
@@ -24,6 +26,8 @@ all: libHYDRO.a
 	    mv run/hrldas.exe ../../Run/wrf_hydro.exe); \
 	fi
 
+# TODO: "ar" command below needs work because most *_objects variables
+# are no longer declared in global.mk.
 libHYDRO.a:
 	cd MPP && make
 	cd Data_Rec && make
