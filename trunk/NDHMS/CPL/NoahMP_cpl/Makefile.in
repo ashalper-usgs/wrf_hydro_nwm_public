@@ -2,10 +2,12 @@
 
 .PHONY: all clean
 
-MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+
+MPIFC = @MPIFC@
+FCFLAGS = @FCFLAGS@
 
 objects = hrldas_drv_HYDRO.o module_hrldas_HYDRO.o
 
@@ -29,7 +31,7 @@ module_hrldas_HYDRO.o: module_hrldas_HYDRO.f	\
 	cd $(dir $@) && make $(notdir $@)
 
 %.f: %.F
-	$(CPP) $(CPPFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f Noah_hrldas_beta libNoahMP_cpl.a
