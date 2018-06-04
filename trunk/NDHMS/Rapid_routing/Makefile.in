@@ -220,10 +220,10 @@ rapid_create_obj.o: 	rapid_create_obj.F90 rapid_var.mod
 
 rapid_arrays.o:	rapid_arrays.F90 rapid_var.mod
 	${FLINKER} ${FPPFLAGS} -c rapid_arrays.F90 ${PETSC_FC_INCLUDES}
-	
+
 rapid_read_namelist.o:	rapid_read_namelist.F90 rapid_var.mod
 	${FLINKER} ${FPPFLAGS} -c rapid_read_namelist.F90
-	
+
 rapid_var.o rapid_var.mod:	rapid_var.F90
 	${FLINKER} ${FPPFLAGS} -c rapid_var.F90 ${PETSC_FC_INCLUDES} ${TAO_INCLUDE} 
 
@@ -236,10 +236,6 @@ rapid_main.o:   rapid_main.F90 rapid_var.mod hrldas_RAPID_wrapper.mod
 
 hrldas_RAPID_drv.o:     hrldas_RAPID_drv.F90 hrldas_RAPID_wrapper.mod
 	${FLINKER} ${FPPFLAGS} -c hrldas_RAPID_drv.F90  ${PETSC_FC_INCLUDE} ${TAO_INCLUDE}
-	
-#-------------------------------------------------------------------------------
-#Clean
-#-------------------------------------------------------------------------------
-clean::
-	${RM} *.o *.mod rapid ../run/rapid ../rtk/rapid
 
+clean:
+	${RM} *.o *.mod rapid ../run/rapid ../rtk/rapid
