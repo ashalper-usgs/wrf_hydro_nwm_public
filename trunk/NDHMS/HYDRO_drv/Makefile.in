@@ -4,6 +4,8 @@
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
 
@@ -23,7 +25,7 @@ $(objects): %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) -I../Routing -I../MPP -I../Data_Rec $<
 
 %.f: %.F
-	$(CPP) $(CPPFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.stb *~ *.f
+	rm -f *.o *.mod *.stb *~ *.f libHYDRO_drv.a
