@@ -2,16 +2,9 @@
 
 .PHONY: all BASIC clean
 
-include global.mk
-
 DEFS = @DEFS@
 
-# make some conditional syntax below easier to read
-ifeq ($(findstring -DWRF_HYDRO_RAPID=1,$(DEFS)),"-DWRF_HYDRO_RAPID=1")
-  WRF_HYDRO_RAPID = 1
-else
-  WRF_HYDRO_RAPID = 0
-endif
+include global.mk
 
 all: libHYDRO.a
 	if [ ! -d "Run" ]; then \
@@ -31,17 +24,14 @@ all: libHYDRO.a
 	    mv run/hrldas.exe ../../Run/wrf_hydro.exe); \
 	fi
 
-# TODO: "ar" command below needs work because most *_objects variables
-# are no longer declared in global.mk.
+# TODO: "ar" command below probably needs work because we don't
+# necessarily want all objects included in the archive
 libHYDRO.a:
 	cd MPP && make
 	cd Data_Rec && make
 	cd Routing && make
 	cd HYDRO_drv && make
-	ar -r $@ $(addprefix MPP/,$(MPP_objects)) \
-                 $(addprefix Data_Rec/,$(Data_Rec_objects)) \
-                 $(addprefix Routing/,$(Routing_objects)) \
-	         $(addprefix HYDRO_drv/,$(HYDRO_drv_objects))
+	ar -r $@ MPP/*.o Data_Rec/*.o Routing/*.o HYDRO_drv/*.o
 
 clean:
 	cd LandModel_cpl && make clean
