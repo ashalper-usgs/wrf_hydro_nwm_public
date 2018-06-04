@@ -7,7 +7,6 @@ AC_INIT([WRF-Hydro], [0.1],
 	[https://github.com/NCAR/wrf_hydro_nwm_public/issues])
 
 AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
-AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
@@ -83,80 +82,68 @@ AC_CHECK_FUNCS([pow strchr strstr])
 # TODO: try to replace with macros if possible
 CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND"
 
+m4_define([DESCRIPTION],
+  [A WRF environment variable. Always enabled for compiling WRF-Hydro.]
+)
 AC_ARG_ENABLE(
   [wrf-hydro],
-  AS_HELP_STRING(
-    [--disable-wrf-hydro],
-    [A WRF environment variable. Always enabled for compiling WRF-Hydro.])
+  AS_HELP_STRING([--disable-wrf-hydro], [DESCRIPTION])
 )
-AS_IF([test "x$enable_wrf-hydro" != "xno"], [WRF_HYDRO=1], [WRF_HYDRO=0])
-AC_SUBST([WRF_HYDRO])
+AS_IF([test "x$enable_wrf_hydro" != "xno"],
+        [AC_DEFINE([WRF_HYDRO], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION],
+  [Disable enhanced diagnostic output for debugging.]
+)
 AC_ARG_ENABLE(
   [hydro-d],
-  AS_HELP_STRING(
-    [--disable-hydro-d],
-    [Disable enhanced diagnostic output for debugging.])
+  AS_HELP_STRING([--disable-hydro-d], [DESCRIPTION])
 )
-AS_IF([test "x$enable_hydro-d" != "xno"], [
-        HYDRO_D=1
-        CPPFLAGS="$CPPFLAGS -DHYDRO_D"
-      ],
-      [HYDRO_D=0])
-AC_SUBST([HYDRO_D])
+AS_IF([test "x$enable_hydro_d" != "xno"],
+        [AC_DEFINE([HYDRO_D], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION],
+  [Enable spatially distributed parameters for NoahMP.]
+)
 AC_ARG_ENABLE(
   [spatial-soil],
-  AS_HELP_STRING(
-    [--enable-spatial-soil],
-    [Enable spatially distributed parameters for NoahMP.]))
-AS_IF([test "x$enable_spatial-soil" = "xyes"], [
-        SPATIAL_SOIL=1
-	CPPFLAGS="$CPPFLAGS -DSPATIAL_SOIL"
-      ],
-      [SPATIAL_SOIL=0])
-AC_SUBST([SPATIAL_SOIL])
+  AS_HELP_STRING([--enable-spatial-soil], [DESCRIPTION])
+)
+AS_IF([test "x$enable_spatial_soil" = "xyes"],
+        [AC_DEFINE([SPATIAL_SOIL], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION], [Enable RAPID model.])
 AC_ARG_ENABLE(
   [wrf-hydro-rapid],
-  AS_HELP_STRING(
-    [--enable-wrf-hydro-rapid],
-    [Enable RAPID model.]))
-AS_IF([test "x$enable_wrf-hydro-rapid" = "xyes"],
-      [WRF_HYDRO_RAPID=1],
-      [WRF_HYDRO_RAPID=0])
-AC_SUBST([WRF_HYDRO_RAPID])
+  AS_HELP_STRING([--enable-wrf-hydro-rapid], [DESCRIPTION])
+)
+AS_IF([test "x$enable_wrf_hydro_rapid" = "xyes"],
+        [AC_DEFINE([WRF_HYDRO_RAPID], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION], [Disable large NetCDF file support.])
 AC_ARG_ENABLE(
   [wrfio-ncd-large-file-support],
   AS_HELP_STRING(
-    [--disable-wrfio-ncd-large-file-support],
-    [Disable large NetCDF file support.])
+    [--disable-wrfio-ncd-large-file-support], [DESCRIPTION])
 )
-AS_IF([test "x$enable_wrfio-ncd-large-file-support" != "xno"], [
-        WRFIO_NCD_LARGE_FILE_SUPPORT=1
-	CPPFLAGS="$CPPFLAGS -DWRFIO_NCD_LARGE_FILE_SUPPORT"
-      ],
-      [WRFIO_NCD_LARGE_FILE_SUPPORT=0])
-AC_SUBST([WRFIO_NCD_LARGE_FILE_SUPPORT])
+AS_IF([test "x$enable_wrfio_ncd_large_file_support" != "xno"],
+        [AC_DEFINE([WRFIO_NCD_LARGE_FILE_SUPPORT], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION], [Enable WCOSS file units.])
 AC_ARG_ENABLE(
   [ncep-wcoss],
-  AS_HELP_STRING([--enable-ncep-wcoss], [Enable WCOSS file units.])
+  AS_HELP_STRING([--enable-ncep-wcoss], [DESCRIPTION])
 )
-AS_IF([test "x$enable_ncep-wcoss" = "xyes"], [NCEP_WCOSS=1], [NCEP_WCOSS=0])
-AC_SUBST([NCEP_WCOSS])
+AS_IF([test "x$enable_ncep_wcoss" = "xyes"],
+        [AC_DEFINE([NCEP_WCOSS], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION], [Enable streamflow nudging.])
 AC_ARG_ENABLE(
   [wrf-hydro-nudging],
-  AS_HELP_STRING([--enable-wrf-hydro-nudging], [Enable streamflow nudging.])
+  AS_HELP_STRING([--enable-wrf-hydro-nudging], [DESCRIPTION])
 )
-AS_IF([test "x$enable_wrf-hydro-nudging" = "xyes"], [
-       WRF_HYDRO_NUDGING=1
-       CPPFLAGS="$CPPFLAGS -DWRF_HYDRO_NUDGING"
-      ],
-      [WRF_HYDRO_NUDGING=0])
-AC_SUBST([WRF_HYDRO_NUDGING])
+AS_IF([test "x$enable_wrf_hydro_nudging" = "xyes"],
+        [AC_DEFINE([WRF_HYDRO_NUDGING], [1], [DESCRIPTION])])
 
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile
