@@ -1,18 +1,17 @@
 # Makefile.in
 
+.PHONY: all clean
+
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
+NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
 
-NoahMP_objects = module_NoahMP_hrldas_driver.o
+all: module_NoahMP_hrldas_driver.o main_hrldas_driver.o module_hrldas_netcdf_io.o
 
-objects = main_hrldas_driver.o module_hrldas_netcdf_io.o
-
-all NoahMP: $(NoahMP_objects) $(objects)
-
-$(objects): %.o: %.f90
+main_hrldas_driver.o: %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
 module_hrldas_netcdf_io.o: %.o: %.f90
@@ -21,25 +20,23 @@ module_hrldas_netcdf_io.o: %.o: %.f90
 
 # TODO: might make things easier to build this at a higher directory
 # level. Also, dependencies might not be correct.
-module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.F \
+module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.f90 \
                                $(addprefix ../../../,HYDRO_drv/module_HYDRO_drv.o	\
                                  $(addprefix Data_Rec/,module_namelist.o module_RT_data.o))
 	$(MPIFC) -o $@ $(FCFLAGS) \
         $(addprefix -I, \
           $(addprefix ../../../, \
-            $(addprefix Land_models/NoahMP/,phys Utility_routines) HYDRO_drv Data_Rec Routing)) \
+            $(addprefix Land_models/NoahMP/,phys Utility_routines) HYDRO_drv Data_Rec MPP Routing)) \
         $?
 
 main_hrldas_driver.o: main_hrldas_driver.F
 
-module_hrldas_netcdf_io.o: module_hrldas_netcdf_io.F
+main_hrldas_driver.o: module_NoahMP_hrldas_driver.o
 
-main_hrldas_driver.o: $(NoahMP_objects)
-
-$(NoahMP_objects): module_hrldas_netcdf_io.o
+module_NoahMP_hrldas_driver.o: module_hrldas_netcdf_io.o
 
 %.f90: %.F
-	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $(MODINC) $< > $@
+	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f90
