@@ -2,28 +2,29 @@
 
 # simple compilation test for modules in overland routing
 
-include ../../macros
+.PHONY: all test clean
 
 FC = @FC@
 FFLAGS = @FFLAGS@
-
-.PHONY: all mod test
-
-all: libOverland.a
+FCFLAGS = @FCFLAGS@
 
 objects = \
   $(addsuffix .o,
     $(addprefix module_overland_,control streams_and_lakes	\
 	routing_properties mass_balance) module_overland)
 
-libOverland.a: $(objects)
+all: test
+
+test: overland_tests
 
 $(objects): %.o: %.F
-	$(FC) $<
+	$(FC) $(FCFLAGS) $<
 
-test:
-	$(FC) $(FFLAGS) overland_tests.F
-	$(FC) -o overland_tests $(objects) overland_tests.o
+overland_tests: overland_tests.o $(objects)
+	$(FC) $(FCFLAGS) -o overland_tests $(objects) $<
+
+overland_tests.o:
+	$(FC) $(FCFLAGS) overland_tests.F
 
 clean:
 	rm -f *.o *.mod overland_tests
