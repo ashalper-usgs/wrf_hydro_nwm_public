@@ -80,7 +80,11 @@ AC_TYPE_OFF_T
 AC_CHECK_FUNCS([pow strchr strstr])
 
 # TODO: try to replace with macros if possible
-CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND"
+CPPFLAGS="-P -xassembler-with-cpp -traditional"
+
+# TODO: find out the purpose of this. It appears to be always set in
+# the previous Make system.
+AC_DEFINE([MPP_LAND], [1], [])
 
 m4_define([DESCRIPTION],
   [A WRF environment variable. Always enabled for compiling WRF-Hydro.]

@@ -5372,7 +5372,12 @@ done
 
 
 # TODO: try to replace with macros if possible
-CPPFLAGS="-P -xassembler-with-cpp -traditional -DMPP_LAND"
+CPPFLAGS="-P -xassembler-with-cpp -traditional"
+
+# TODO: find out the purpose of this. It appears to be always set in
+# the previous Make system.
+$as_echo "#define MPP_LAND 1" >>confdefs.h
+
 
 
 # Check whether --enable-wrf-hydro was given.
