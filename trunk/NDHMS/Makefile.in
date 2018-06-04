@@ -2,9 +2,16 @@
 
 .PHONY: all BASIC clean
 
+include global.mk
+
 DEFS = @DEFS@
 
-include global.mk
+# make some conditional syntax below easier to read
+ifeq ($(findstring -DWRF_HYDRO_RAPID=1,$(DEFS)),"-DWRF_HYDRO_RAPID=1")
+  WRF_HYDRO_RAPID = 1
+else
+  WRF_HYDRO_RAPID = 0
+endif
 
 all: libHYDRO.a
 	if [ ! -d "Run" ]; then \
@@ -13,12 +20,10 @@ all: libHYDRO.a
 	if [ -d "LandModel_cpl" ]; then \
 	   (cd LandModel_cpl; make); \
 	fi
-	if [ "$(findstring -DWRF_HYDRO_RAPID=1,$(DEFS))" = \
-	     "-DWRF_HYDRO_RAPID=1" ]; then \
+	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd lib; rm -f librapid.a); \
 	fi
-	if [ "$(findstring -DWRF_HYDRO_RAPID=1,$(DEFS))" = \
-             "-DWRF_HYDRO_RAPID=1" ]; then \
+	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd Rapid_routing; make -f makefile.cpl rapid); \
 	fi
 	if [ -d "LandModel" ]; then \
@@ -41,7 +46,7 @@ libHYDRO.a:
 clean:
 	cd LandModel_cpl && make clean
 	cd LandModel && make clean
-	if [ $(WRF_HYDRO_RAPID) -eq 1 ]; then \
+	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd Rapid_routing; make -f makefile.cpl clean); \
 	fi
 	rm -rf */*.mod */*.o libHYDRO.a Run *~ lib/*.a CPL/*/*.o CPL/*/*.mod
