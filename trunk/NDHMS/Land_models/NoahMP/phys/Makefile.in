@@ -1,7 +1,10 @@
 # Makefile.in
 
+.PHONY: all clean
+
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
+DEFS = @DEFS@
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
@@ -15,7 +18,7 @@ $(objects): %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
 %.f90: %.F
-	$(CPP) $(CPPFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 module_sf_noahmpdrv.o: module_sf_noahmplsm.o		\
                        module_sf_noahmp_glacier.o	\
