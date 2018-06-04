@@ -4,6 +4,7 @@
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
+DEFS = @DEFS@
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
@@ -36,7 +37,7 @@ main_hrldas_driver.o: module_NoahMP_hrldas_driver.o
 module_NoahMP_hrldas_driver.o: module_hrldas_netcdf_io.o
 
 %.f90: %.F
-	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $(NETCDF4_CFLAGS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f90
