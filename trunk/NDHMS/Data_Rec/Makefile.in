@@ -2,6 +2,7 @@
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
 
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
@@ -24,7 +25,7 @@ module_gw_gw2d_data.o: module_gw_gw2d_data.f
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
 %.f: %.F
-	$(CPP) $(CPPFLAGS) $(NETCDF4_CFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f libData_Rec.a
