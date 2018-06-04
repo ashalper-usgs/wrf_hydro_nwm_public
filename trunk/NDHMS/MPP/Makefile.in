@@ -1,15 +1,11 @@
 # Makefile.in
 
-WRF_HYDRO = @WRF_HYDRO@
-HYDRO_D = @HYDRO_D@
-SPATIAL_SOIL = @SPATIAL_SOIL@
-WRF_HYDRO_RAPID = @WRF_HYDRO_RAPID@
-WRFIO_NCD_LARGE_FILE_SUPPORT = @WRFIO_NCD_LARGE_FILE_SUPPORT@
-NCEP_WCOSS = @NCEP_WCOSS@
-WRF_HYDRO_NUDGING = @WRF_HYDRO_NUDGING@
+.PHONY: all clean
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
 
@@ -25,7 +21,7 @@ $(objects): %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
 %.f: %.F
-	$(CPP) $(CPPFLAGS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.f *.stb *~ libMPP.a
