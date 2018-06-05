@@ -33,12 +33,10 @@ module_NoahMP_hrldas_driver.o: %.o: %.f90 module_hrldas_netcdf_io.o		\
           Land_models/NoahMP/,phys Utility_routines) MPP Routing	\
           HYDRO_drv Data_Rec) $<
 
-# TODO: prerequisites probably need additions here
-module_hrldas_netcdf_io.o: %.o: %.f90 \
-                           ../../../Land_models/NoahMP/Utility_routines/module_date_utilities.o
-	$(MPIFC) -o $@ $(FCFLAGS) \
-          $(addprefix -I../../../,$(addprefix \
-                           Land_models/NoahMP/,Utility_routines phys) MPP) $<
+module_hrldas_netcdf_io.o: %.o: %.f90					\
+                           ../Utility_routines/module_date_utilities.o	\
+                           ../../../MPP/mpp_land.o
+	$(MPIFC) -o $@ $(FCFLAGS) -I../Utility_routines -I../../../MPP $<
 
 %.f90: %.F
 	$(CPP) $(CPPFLAGS) $(DEFS) $(NETCDF4_CFLAGS) $< > $@
