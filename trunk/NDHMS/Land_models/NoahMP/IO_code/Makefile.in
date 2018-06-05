@@ -13,7 +13,9 @@ NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
 objects = module_NoahMP_hrldas_driver.o main_hrldas_driver.o	\
           module_hrldas_netcdf_io.o
 
-all: $(objects)
+all: ../../../libHYDRO.a
+
+../../../libHYDRO.a: $(objects)
 
 main_hrldas_driver.o: %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<

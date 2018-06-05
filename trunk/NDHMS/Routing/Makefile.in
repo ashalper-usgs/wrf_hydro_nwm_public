@@ -13,9 +13,9 @@ objects = $(addsuffix .o, module_date_utilities_rt Noah_distr_routing	\
             module_noah_chan_param_init_rt module_RT			\
             module_channel_routing module_gw_gw2d module_lsm_forcing)
 
-all: libRouting.a
+all: ../libHYDRO.a
 
-libRouting.a: $(objects)
+../libHYDRO.a: $(objects)
 	ar -r $@ $?
 
 module_date_utilities_rt.o: %.o: %.f
@@ -98,4 +98,4 @@ module_channel_routing.o: module_UDMAP.o $(addprefix ../nudging/,	\
 endif
 
 clean:	
-	rm -f *.o *.mod *.stb *~ *.f libRouting.a
+	rm -f *.o *.mod *.stb *~ *.f

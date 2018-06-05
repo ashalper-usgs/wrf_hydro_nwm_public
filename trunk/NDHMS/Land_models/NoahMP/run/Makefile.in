@@ -2,7 +2,7 @@
 
 include ../../../global.mk
 
-.PHONY:
+.PHONY: all NoahMP clean
 
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@

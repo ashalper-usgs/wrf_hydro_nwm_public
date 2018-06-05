@@ -10,9 +10,9 @@ FCFLAGS = @FCFLAGS@
 objects = $(addsuffix .o,\
   module_namelist module_RT_data module_gw_gw2d_data)
 
-all: libData_Rec.a
+all: ../libHYDRO.a
 
-libData_Rec.a: $(objects)
+../libHYDRO.a: $(objects)
 	ar -r $@ $?
 
 module_namelist.o: module_namelist.f

@@ -12,9 +12,9 @@ FCFLAGS = @FCFLAGS@
 objects = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o	\
           module_mpp_GWBUCKET.o
 
-all: libMPP.a
+all: ../libHYDRO.a
 
-libMPP.a: $(objects)
+../libHYDRO.a: $(objects)
 	ar -r $@ $?
 
 $(objects): %.o: %.f

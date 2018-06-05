@@ -11,9 +11,9 @@ FCFLAGS = @FCFLAGS@
 
 objects = hrldas_drv_HYDRO.o module_hrldas_HYDRO.o
 
-all: libNoahMP_cpl.a
+all: ../../libHYDRO.a
 
-libNoahMP_cpl.a: $(objects)
+../../libHYDRO.a: $(objects)
 	ar -r $@ $?
 
 module_hrldas_HYDRO.o: %.o: %.f
@@ -28,4 +28,4 @@ hrldas_drv_HYDRO.o: %.o: %.f module_hrldas_HYDRO.o
 	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.stb *~ *.f Noah_hrldas_beta libNoahMP_cpl.a
+	rm -f *.o *.mod *.stb *~ *.f Noah_hrldas_beta
