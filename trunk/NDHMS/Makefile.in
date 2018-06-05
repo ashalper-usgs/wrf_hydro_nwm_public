@@ -14,9 +14,6 @@ all: libHYDRO.a
 	   (cd LandModel_cpl; make); \
 	fi
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
-	   (cd lib; rm -f librapid.a); \
-	fi
-	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd Rapid_routing; make -f makefile.cpl rapid); \
 	fi
 	if [ -d "LandModel" ]; then \
@@ -24,20 +21,18 @@ all: libHYDRO.a
 	    mv run/hrldas.exe ../../Run/wrf_hydro.exe); \
 	fi
 
-# TODO: "ar" command below probably needs work because we don't
-# necessarily want all objects included in the archive
 libHYDRO.a:
 	cd MPP && make
 	cd Data_Rec && make
 	cd Routing && make
 	cd HYDRO_drv && make
-	ar -r $@ MPP/*.o Data_Rec/*.o Routing/*.o HYDRO_drv/*.o
 
 clean:
 	cd LandModel_cpl && make clean
 	cd LandModel && make clean
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
-	   (cd Rapid_routing; make -f makefile.cpl clean); \
+	   rm -f lib/librapid.a; \
+	   (cd Rapid_routing && make -f makefile.cpl clean); \
 	fi
 	rm -rf */*.mod */*.o libHYDRO.a Run *~ lib/*.a CPL/*/*.o CPL/*/*.mod
 
