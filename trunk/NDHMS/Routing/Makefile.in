@@ -7,8 +7,6 @@ DEFS = @DEFS@
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
 
-WRF_HYDRO_NUDGING = @WRF_HYDRO_NUDGING@
-
 objects = $(addsuffix .o, module_date_utilities_rt Noah_distr_routing	\
             module_UDMAP module_GW_baseflow module_HYDRO_utils		\
             module_NWM_io_dict module_HYDRO_io module_NWM_io		\
