@@ -9,19 +9,20 @@ DEFS = @DEFS@
 MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
 
-objects = module_hrldas_HYDRO.o
+objects = hrldas_drv_HYDRO.o module_hrldas_HYDRO.o
 
 all: libNoahMP_cpl.a
 
-libNoahMP_cpl.a: $(objects) hrldas_drv_HYDRO.o
+libNoahMP_cpl.a: $(objects)
 	ar -r $@ $?
 
-$(objects): %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) $<
-
-hrldas_drv_HYDRO.o: %.o: %.f
+module_hrldas_HYDRO.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) \
-          $(addprefix -I../../,Routing Data_Rec MPP) $<
+	  $(addprefix -I../../,Data_Rec HYDRO_drv MPP) $<
+
+hrldas_drv_HYDRO.o: %.o: %.f module_hrldas_HYDRO.o
+	$(MPIFC) -o $@ $(FCFLAGS) \
+          $(addprefix -I../../,Data_Rec MPP Routing) $<
 
 %.f: %.F
 	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
