@@ -1,5 +1,7 @@
 # Makefile.in
 
+include ../global.mk
+
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 DEFS = @DEFS@
@@ -14,6 +16,7 @@ objects = $(addsuffix .o, module_date_utilities_rt Noah_distr_routing	\
             module_channel_routing module_gw_gw2d module_lsm_forcing)
 
 all: ../libHYDRO.a
+	cd Overland && make
 
 ../libHYDRO.a: $(objects)
 	ar -r $@ $?
