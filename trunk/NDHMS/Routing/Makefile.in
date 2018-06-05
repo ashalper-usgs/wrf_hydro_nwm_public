@@ -24,14 +24,8 @@ all: ../libHYDRO.a
 module_date_utilities_rt.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
-%.f: %.F
-	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
-
 module_lsm_forcing.o module_noah_chan_param_init_rt.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP $<
-
-module_RT.o: %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP -I../Data_Rec $<
 
 Noah_distr_routing.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP -I../Data_Rec -I../Routing/Overland $<
@@ -40,22 +34,12 @@ module_gw_gw2d.o: %.o: %.f module_HYDRO_io.o ../MPP/mpp_land.o	\
                   ../Data_Rec/module_gw_gw2d_data.o
 	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(dir $^)) $<
 
-module_gw_gw2d.f: %.f: %.F
-	$(CPP) $(CPPFLAGS) $(DEFS) -I../Data_Rec $< > $@
-
 ifneq ($(WRF_HYDRO_NUDGING),1)
-module_HYDRO_io.o: module_HYDRO_io.f module_HYDRO_utils.o		\
-	           module_date_utilities_rt.o				\
-	           ../Data_Rec/module_namelist.o			\
-	           ../Data_Rec/module_RT_data.o ../MPP/mpp_land.o
-	$(MPIFC) -o $@ $(FCFLAGS) -I../Data_Rec -I../MPP $<
-else 
-module_HYDRO_io.o: module_HYDRO_io.f module_HYDRO_utils.o	\
-	           module_date_utilities_rt.o			\
-	           ../nudging/module_date_utils_nudging.o	\
-	           ../nudging/module_nudging_io.o		\
-	           ../Data_Rec/module_namelist.o		\
-	           ../Data_Rec/module_RT_data.o
+module_HYDRO_io.o: %.o: %.f ../MPP/mpp_land.o ../Data_Rec/module_namelist.o
+	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP -I../Data_Rec $<
+else
+# TODO: this needs prerequisites and -I options
+module_HYDRO_io.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 endif
 
@@ -69,19 +53,12 @@ module_HYDRO_utils.o: module_HYDRO_utils.f ../MPP/mpp_land.o ../Data_Rec/module_
 	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP -I../Data_Rec $<
 
 ifneq ($(WRF_HYDRO_NUDGING),1)
-module_RT.o: module_GW_baseflow.o module_HYDRO_utils.o		\
-	     module_HYDRO_io.o module_noah_chan_param_init_rt.o	\
-	     module_UDMAP.o ../Data_Rec/module_namelist.o	\
-	     ../Data_Rec/module_RT_data.o			\
-	     ../Data_Rec/module_gw_gw2d_data.o
+module_RT.o: %.o: %.f ../MPP/module_mpp_ReachLS.o ../Data_Rec/module_RT_data.o
+	$(MPIFC) -o $@ $(FCFLAGS) -I../MPP -I../Data_Rec $<
 else
-module_RT.o: module_GW_baseflow.o module_HYDRO_utils.o		\
-	     module_HYDRO_io.o module_noah_chan_param_init_rt.o	\
-	     module_UDMAP.o ../Data_Rec/module_namelist.o	\
-	     ../Data_Rec/module_RT_data.o			\
-	     ../Data_Rec/module_gw_gw2d_data.o			\
-	     ../nudging/module_date_utils_nudging.o		\
-	     ../nudging/module_nudging_io.o
+# TODO: this needs prerequisites and -I options
+module_RT.o: %.o: %.f
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 endif
 
 module_GW_baseflow.o: module_GW_baseflow.f module_UDMAP.o ../MPP/mpp_land.o
@@ -98,7 +75,14 @@ module_channel_routing.o: module_UDMAP.o $(addprefix ../nudging/,	\
                           module_date_utils_nudging.o			\
                           module_nudging_utils.o			\
                           module_stream_nudging.o)
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 endif
+
+%.f: %.F
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
+
+module_gw_gw2d.f: %.f: %.F
+	$(CPP) $(CPPFLAGS) $(DEFS) -I../Data_Rec $< > $@
 
 clean:	
 	rm -f *.o *.mod *.stb *~ *.f
