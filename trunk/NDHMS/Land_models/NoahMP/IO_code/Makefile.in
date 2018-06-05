@@ -16,6 +16,7 @@ objects = module_NoahMP_hrldas_driver.o main_hrldas_driver.o	\
 all: ../../../libHYDRO.a
 
 ../../../libHYDRO.a: $(objects)
+	ar -r $@ $?
 
 main_hrldas_driver.o: %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<
