@@ -702,6 +702,8 @@ enable_wrf_hydro_rapid
 enable_wrfio_ncd_large_file_support
 enable_ncep_wcoss
 enable_wrf_hydro_nudging
+enable_output_chan_conn
+enable_precip_double
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1343,6 +1345,11 @@ Optional Features:
 
   --enable-wrf-hydro-nudging
                           Enable streamflow nudging.
+
+  --enable-output-chan-conn
+                          Enable output channel connectivity.
+
+  --enable-precip-double  Enable PRECIP_DOUBLE.
 
 
 Optional Packages:
@@ -5460,6 +5467,31 @@ fi
 if test "x$enable_wrf_hydro_nudging" = "xyes"; then :
 
 $as_echo "#define WRF_HYDRO_NUDGING 1" >>confdefs.h
+
+fi
+
+
+# Check whether --enable-output-chan-conn was given.
+if test "${enable_output_chan_conn+set}" = set; then :
+  enableval=$enable_output_chan_conn;
+fi
+
+if test "x$enable_output_chan_conn" = "xyes"; then :
+
+$as_echo "#define OUTPUT_CHAN_CONN 1" >>confdefs.h
+
+fi
+
+# TODO: need a better description here.
+
+# Check whether --enable-precip-double was given.
+if test "${enable_precip_double+set}" = set; then :
+  enableval=$enable_precip_double;
+fi
+
+if test "x$enable_precip_double" = "xyes"; then :
+
+$as_echo "#define PRECIP_DOUBLE 1" >>confdefs.h
 
 fi
 

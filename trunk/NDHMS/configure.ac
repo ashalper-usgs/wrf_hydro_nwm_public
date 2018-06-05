@@ -149,6 +149,23 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_wrf_hydro_nudging" = "xyes"],
         [AC_DEFINE([WRF_HYDRO_NUDGING], [1], [DESCRIPTION])])
 
+m4_define([DESCRIPTION], [Enable output channel connectivity.])
+AC_ARG_ENABLE(
+  [output-chan-conn],
+  AS_HELP_STRING([--enable-output-chan-conn], [DESCRIPTION])
+)
+AS_IF([test "x$enable_output_chan_conn" = "xyes"],
+        [AC_DEFINE([OUTPUT_CHAN_CONN], [1], [DESCRIPTION])])
+
+# TODO: need a better description here.
+m4_define([DESCRIPTION], [Enable PRECIP_DOUBLE.])
+AC_ARG_ENABLE(
+  [precip-double],
+  AS_HELP_STRING([--enable-precip-double], [DESCRIPTION])
+)
+AS_IF([test "x$enable_precip_double" = "xyes"],
+        [AC_DEFINE([PRECIP_DOUBLE], [1], [DESCRIPTION])])
+
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile
                  CPL/NUOPC_cpl/Makefile
