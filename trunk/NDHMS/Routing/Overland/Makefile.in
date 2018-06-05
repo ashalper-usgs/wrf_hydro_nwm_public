@@ -4,7 +4,7 @@
 
 .PHONY: all test clean
 
-FC = @FC@
+MPIFC = @MPIFC@
 FFLAGS = @FFLAGS@
 FCFLAGS = @FCFLAGS@
 
@@ -19,21 +19,21 @@ all: ../../libHYDRO.a
 	ar -r $@ $?
 
 $(objects): %.o: %.F
-	$(FC) $(FCFLAGS) $<
+	$(MPIFC) $(FCFLAGS) $<
 
 module_overland.o: %.o: %.F module_overland_control.o \
                    module_overland_streams_and_lakes.o \
                    module_overland_routing_properties.o \
                    module_overland_mass_balance.o
-	$(FC) $(FCFLAGS) $<
+	$(MPIFC) $(FCFLAGS) $<
 
 test: overland_tests
 
 overland_tests: overland_tests.o $(objects)
-	$(FC) $(FCFLAGS) -o overland_tests $(objects) $<
+	$(MPIFC) $(FCFLAGS) -o overland_tests $(objects) $<
 
 overland_tests.o:
-	$(FC) $(FCFLAGS) overland_tests.F
+	$(MPIFC) $(FCFLAGS) overland_tests.F
 
 clean:
 	rm -f *.o *.mod overland_tests *~
