@@ -13,18 +13,20 @@ all: libHYDRO.a
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd Rapid_routing && make -f makefile.cpl rapid); \
 	fi
-	if [ -d "LandModel" ]; then \
-	   (cd LandModel; make; rm -f ../../Run/wrf_hydro.exe; \
-	    mv run/hrldas.exe ../../Run/wrf_hydro.exe); \
-	fi
+	cd LandModel && make
 
-# TODO: still need to get dependencies sorted out here
+# TODO: still need to get dependencies sorted out here. The commands
+# below are probably sequence-sensitive.
 libHYDRO.a:
 	cd MPP && make
 	cd Data_Rec && make
 	cd Routing && make
 	cd HYDRO_drv && make
 	cd LandModel_cpl && make
+	cd Routing/Overland && make clean && make # <- hack; try to fix
+
+install:
+	cp Land_models/NoahMP/run/hrldas.exe Run/wrf_hydro.exe
 
 clean:
 	cd LandModel_cpl && make clean
