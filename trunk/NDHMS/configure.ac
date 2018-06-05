@@ -79,12 +79,10 @@ AC_TYPE_OFF_T
 # Checks for library functions.
 AC_CHECK_FUNCS([pow strchr strstr])
 
-# TODO: try to replace with macros if possible
+# TODO: try to replace with Autotools macros if possible
 CPPFLAGS="-P -xassembler-with-cpp -traditional"
 
-# TODO: find out the purpose of this. It appears to be always set in
-# the previous Make system.
-AC_DEFINE([MPP_LAND], [1], [])
+AC_DEFINE([MPP_LAND], [1], [Use parallel land model.])
 
 m4_define([DESCRIPTION],
   [A WRF environment variable. Always enabled for compiling WRF-Hydro.]
@@ -157,8 +155,7 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_output_chan_conn" = "xyes"],
         [AC_DEFINE([OUTPUT_CHAN_CONN], [1], [DESCRIPTION])])
 
-# TODO: need a better description here.
-m4_define([DESCRIPTION], [Enable PRECIP_DOUBLE.])
+m4_define([DESCRIPTION], [Double precipitation.])
 AC_ARG_ENABLE(
   [precip-double],
   AS_HELP_STRING([--enable-precip-double], [DESCRIPTION])

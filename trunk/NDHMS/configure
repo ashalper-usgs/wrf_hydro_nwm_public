@@ -1349,7 +1349,7 @@ Optional Features:
   --enable-output-chan-conn
                           Enable output channel connectivity.
 
-  --enable-precip-double  Enable PRECIP_DOUBLE.
+  --enable-precip-double  Double precipitation.
 
 
 Optional Packages:
@@ -5378,11 +5378,10 @@ fi
 done
 
 
-# TODO: try to replace with macros if possible
+# TODO: try to replace with Autotools macros if possible
 CPPFLAGS="-P -xassembler-with-cpp -traditional"
 
-# TODO: find out the purpose of this. It appears to be always set in
-# the previous Make system.
+
 $as_echo "#define MPP_LAND 1" >>confdefs.h
 
 
@@ -5482,7 +5481,6 @@ $as_echo "#define OUTPUT_CHAN_CONN 1" >>confdefs.h
 
 fi
 
-# TODO: need a better description here.
 
 # Check whether --enable-precip-double was given.
 if test "${enable_precip_double+set}" = set; then :
