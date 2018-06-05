@@ -44,9 +44,8 @@ all: hrldas.exe
 # default we create the exe based on NoahMP
 #  $(HYDRO_LIB) $(RAPID_LIB) $(NETCDFLIB) $(RAPID_MACRO) $(LDFLAGS) $(LIBS)
 hrldas.exe: $(objects)
-	$(MPIFC) -o $@ -I../IO_code -I../phys $(objects)	\
-        $(NoahMP_objects) ../../../libHYDRO.a $(NETCDF4_FLIBS)
-
+	$(MPIFC) -o $@ ../IO_code/main_hrldas_driver.o \
+          -L../../.. -lHYDRO $(NETCDF4_FLIBS)
 
 # Template to create the exe file based on different land model. Such as NoahMP
 #   $(HYDRO_LIB) $(NETCDFLIB) $(LDFLAGS) $(LIBS)
