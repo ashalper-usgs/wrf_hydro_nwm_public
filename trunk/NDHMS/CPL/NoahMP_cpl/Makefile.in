@@ -16,7 +16,7 @@ all: ../../libHYDRO.a
 ../../libHYDRO.a: $(objects)
 	ar -r $@ $?
 
-module_hrldas_HYDRO.o: %.o: %.f
+module_hrldas_HYDRO.o: %.o: %.f ../../HYDRO_drv/module_HYDRO_drv.o
 	$(MPIFC) -o $@ $(FCFLAGS) \
 	  $(addprefix -I../../,Data_Rec HYDRO_drv MPP) $<
 
