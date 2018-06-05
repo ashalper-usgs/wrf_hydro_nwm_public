@@ -10,31 +10,32 @@ MPIFC = @MPIFC@
 FCFLAGS = @FCFLAGS@
 NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
 
-all: module_NoahMP_hrldas_driver.o main_hrldas_driver.o module_hrldas_netcdf_io.o
+objects = module_NoahMP_hrldas_driver.o main_hrldas_driver.o	\
+          module_hrldas_netcdf_io.o
+
+all: $(objects)
 
 main_hrldas_driver.o: %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<
 
-module_hrldas_netcdf_io.o: %.o: %.f90
+module_NoahMP_hrldas_driver.o: %.o: %.f90 module_hrldas_netcdf_io.o		\
+                               $(addprefix ../../../,\
+                                 $(addprefix Land_models/NoahMP/,		\
+                                   phys/module_sf_noahmp_groundwater.o		\
+                                   Utility_routines/module_date_utilities.o)	\
+                                 MPP/mpp_land.o Routing/module_NWM_io.o		\
+                                 HYDRO_drv/module_HYDRO_drv.o			\
+                                 Data_Rec/module_namelist.o)
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I../../../,$(addprefix	\
+          Land_models/NoahMP/,phys Utility_routines) MPP Routing	\
+          HYDRO_drv Data_Rec) $<
+
+# TODO: prerequisites probably need additions here
+module_hrldas_netcdf_io.o: %.o: %.f90 \
+                           ../../../Land_models/NoahMP/Utility_routines/module_date_utilities.o
 	$(MPIFC) -o $@ $(FCFLAGS) \
-        $(addprefix -I../../../,Land_models/NoahMP/Utility_routines MPP) $<
-
-# TODO: might make things easier to build this at a higher directory
-# level. Also, dependencies might not be correct.
-module_NoahMP_hrldas_driver.o: module_NoahMP_hrldas_driver.f90 \
-                               $(addprefix ../../../,HYDRO_drv/module_HYDRO_drv.o	\
-                                 $(addprefix Data_Rec/,module_namelist.o module_RT_data.o))
-	$(MPIFC) -o $@ $(FCFLAGS) \
-        $(addprefix -I, \
-          $(addprefix ../../../, \
-            $(addprefix Land_models/NoahMP/,phys Utility_routines) HYDRO_drv Data_Rec MPP Routing)) \
-        $?
-
-main_hrldas_driver.o: main_hrldas_driver.F
-
-main_hrldas_driver.o: module_NoahMP_hrldas_driver.o
-
-module_NoahMP_hrldas_driver.o: module_hrldas_netcdf_io.o
+          $(addprefix -I../../../,$(addprefix \
+                           Land_models/NoahMP/,Utility_routines phys) MPP) $<
 
 %.f90: %.F
 	$(CPP) $(CPPFLAGS) $(DEFS) $(NETCDF4_CFLAGS) $< > $@
