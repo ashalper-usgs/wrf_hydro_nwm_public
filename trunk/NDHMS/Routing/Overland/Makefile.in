@@ -15,7 +15,7 @@ objects = \
 
 all: ../../libHYDRO.a
 
-../../libHYDRO.a: module_overland.o
+../../libHYDRO.a: $(objects) module_overland.o
 	ar -r $@ $?
 
 $(objects): %.o: %.F
