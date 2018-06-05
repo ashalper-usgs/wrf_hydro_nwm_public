@@ -1,35 +1,27 @@
-# Makefile 
-#
-.SUFFIXES:
-.SUFFIXES: .o .F
+# Makefile.in
 
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
 
+MPIFC = @MPIFC@
+FCFLAGS = @FCFLAGS@
 
-include ../../macros
+objects = module_hrldas_HYDRO.o hrldas_drv_HYDRO.o
 
-MODFLAG =       -I./ -I ../../MPP -I ../../mod
+all: $(objects) 
 
-OBJS = \
-	module_hrldas_HYDRO.o \
-	hrldas_drv_HYDRO.o    
-all:	$(OBJS) 
+hrldas_drv_HYDRO.o: module_hrldas_HYDRO.o
+	$(MPIFC) -o $@ $(FCFLAGS) $<
 
-.F.o:
-	@echo ""
-	$(CPP) $(CPPFLAGS) -I$(NETCDFINC) $(*).F > $(*).f
-#	$(COMPILER90) -o $(@) $(F90FLAGS) $(MODFLAG) $(*).f
-	$(COMPILER90) -o $(@) $(F90FLAGS) $(MODFLAG) -I$(NETCDF_INC) $(*).f
-	$(RMD) $(*).f
-	@echo ""
-	ar -r ../../lib/libHYDRO.a $(@)
+module_hrldas_HYDRO.o: ../../MPP/mpp_land.o
+	$(MPIFC) -o $@ $(FCFLAGS)
 
-#
-# Dependencies:
-#
-module_hrldas_HYDRO.o: ../../Data_Rec/module_RT_data.o ../../Data_Rec/module_namelist.o ../../HYDRO_drv/module_HYDRO_drv.o
+%.f: %.F
+	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
-hrldas_drv_HYDRO.o: module_hrldas_HYDRO.o ../../Data_Rec/module_namelist.o ../../Routing/module_lsm_forcing.o
-
+module_hrldas_HYDRO.f: %.F
+	$(CPP) $(CPPFLAGS) $(DEFS) $(addprefix -I,$(dir $^)) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f Noah_hrldas_beta
