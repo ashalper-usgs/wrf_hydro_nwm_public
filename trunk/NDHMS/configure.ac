@@ -194,8 +194,9 @@ AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  Land_models/NoahMP/run/Makefile
                  MPP/Makefile
                  Makefile
-                 Rapid_routing/Makefile
                  Routing/Makefile
                  Routing/Overland/Makefile
                  nudging/Makefile])
+AS_IF([test "x$enable_wrf_hydro_rapid" = "xyes"],
+        [AC_CONFIG_FILES([Rapid_routing/Makefile])])
 AC_OUTPUT
