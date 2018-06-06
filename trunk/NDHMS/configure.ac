@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([WRF-Hydro], [0.1],
+AC_INIT([WRF-Hydro], [5.0],
 	[https://github.com/NCAR/wrf_hydro_nwm_public/issues])
 
 AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
@@ -31,10 +31,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
 # Checks for libraries.
-# FIXME: Replace `main' with a function in `-lHYDRO':
-AC_CHECK_LIB([HYDRO], [main])
-# FIXME: Replace `main' with a function in `-lX11':
-AC_CHECK_LIB([X11], [main])
+
 # FIXME: Replace `main' with a function in `-lXext':
 AC_CHECK_LIB([Xext], [main])
 # FIXME: Replace `main' with a function in `-lbz2':
@@ -78,6 +75,17 @@ AC_TYPE_OFF_T
 
 # Checks for library functions.
 AC_CHECK_FUNCS([pow strchr strstr])
+
+# File prerequisites.
+AC_MSG_CHECKING([for X11 color database])
+AS_IF(
+  [test -f "/usr/lib/X11/rgb.txt" -o -f "/usr/share/X11/rgb.txt"],
+    [AC_MSG_RESULT([yes])],
+    [AC_MSG_WARN(
+      [X color database not found; modules under Land_models/Noah
+       might not work properly]
+     )]
+)
 
 # TODO: try to replace with Autotools macros if possible
 CPPFLAGS="-P -xassembler-with-cpp -traditional"
