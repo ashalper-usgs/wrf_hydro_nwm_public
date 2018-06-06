@@ -16,7 +16,7 @@ all: libHYDRO.a
 	cd LandModel && make
 
 # TODO: still need to get dependencies sorted out here. The commands
-# below are probably sequence-sensitive.
+# below are sequence-sensitive.
 libHYDRO.a:
 	cd MPP && make
 	cd Data_Rec && make
