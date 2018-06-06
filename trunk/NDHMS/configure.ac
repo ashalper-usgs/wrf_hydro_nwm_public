@@ -15,7 +15,7 @@ AC_PROG_CC
 CPP=cpp
 AC_PROG_FC([pgfortran gfortran ifort], [Fortran 90])
 AC_LANG_PUSH([Fortran])
-AX_MPI				# MPI (Message Passing Interface) compiler
+AX_MPI
 AC_LANG_POP([Fortran])
 # Portland Group Fortran
 AS_IF(
@@ -34,6 +34,88 @@ AS_IF(
 )
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+
+AC_DEFINE([MPP_LAND], [1], [Use parallel land model.])
+
+m4_define([DESCRIPTION],
+  [A WRF environment variable. Always enabled for compiling WRF-Hydro.]
+)
+AC_ARG_ENABLE(
+  [wrf-hydro],
+  AS_HELP_STRING([--disable-wrf-hydro], [DESCRIPTION])
+)
+AS_IF([test "x$enable_wrf_hydro" != "xno"],
+        [AC_DEFINE([WRF_HYDRO], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION],
+  [Disable enhanced diagnostic output for debugging.]
+)
+AC_ARG_ENABLE(
+  [hydro-d],
+  AS_HELP_STRING([--disable-hydro-d], [DESCRIPTION])
+)
+AS_IF([test "x$enable_hydro_d" != "xno"],
+        [AC_DEFINE([HYDRO_D], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION],
+  [Enable spatially distributed parameters for NoahMP.]
+)
+AC_ARG_ENABLE(
+  [spatial-soil],
+  AS_HELP_STRING([--enable-spatial-soil], [DESCRIPTION])
+)
+AS_IF([test "x$enable_spatial_soil" = "xyes"],
+        [AC_DEFINE([SPATIAL_SOIL], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION], [Enable RAPID model.])
+AC_ARG_ENABLE(
+  [wrf-hydro-rapid],
+  AS_HELP_STRING([--enable-wrf-hydro-rapid], [DESCRIPTION])
+)
+AS_IF([test "x$enable_wrf_hydro_rapid" = "xyes"], [
+        AC_DEFINE([WRF_HYDRO_RAPID], [1], [DESCRIPTION])
+])
+
+m4_define([DESCRIPTION], [Disable large NetCDF file support.])
+AC_ARG_ENABLE(
+  [wrfio-ncd-large-file-support],
+  AS_HELP_STRING(
+    [--disable-wrfio-ncd-large-file-support], [DESCRIPTION])
+)
+AS_IF([test "x$enable_wrfio_ncd_large_file_support" != "xno"],
+        [AC_DEFINE([WRFIO_NCD_LARGE_FILE_SUPPORT], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION], [Enable WCOSS file units.])
+AC_ARG_ENABLE(
+  [ncep-wcoss],
+  AS_HELP_STRING([--enable-ncep-wcoss], [DESCRIPTION])
+)
+AS_IF([test "x$enable_ncep_wcoss" = "xyes"],
+        [AC_DEFINE([NCEP_WCOSS], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION], [Enable streamflow nudging.])
+AC_ARG_ENABLE(
+  [wrf-hydro-nudging],
+  AS_HELP_STRING([--enable-wrf-hydro-nudging], [DESCRIPTION])
+)
+AS_IF([test "x$enable_wrf_hydro_nudging" = "xyes"],
+        [AC_DEFINE([WRF_HYDRO_NUDGING], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION], [Enable output channel connectivity.])
+AC_ARG_ENABLE(
+  [output-chan-conn],
+  AS_HELP_STRING([--enable-output-chan-conn], [DESCRIPTION])
+)
+AS_IF([test "x$enable_output_chan_conn" = "xyes"],
+        [AC_DEFINE([OUTPUT_CHAN_CONN], [1], [DESCRIPTION])])
+
+m4_define([DESCRIPTION], [Double precipitation.])
+AC_ARG_ENABLE(
+  [precip-double],
+  AS_HELP_STRING([--enable-precip-double], [DESCRIPTION])
+)
+AS_IF([test "x$enable_precip_double" = "xyes"],
+        [AC_DEFINE([PRECIP_DOUBLE], [1], [DESCRIPTION])])
 
 # Checks for libraries.
 
@@ -80,87 +162,6 @@ AS_IF(
 # TODO: this is probably bad. See
 # https://www.gnu.org/software/automake/manual/html_node/Flag-Variables-Ordering.html
 CPPFLAGS="-P -xassembler-with-cpp -traditional-cpp"
-
-AC_DEFINE([MPP_LAND], [1], [Use parallel land model.])
-
-m4_define([DESCRIPTION],
-  [A WRF environment variable. Always enabled for compiling WRF-Hydro.]
-)
-AC_ARG_ENABLE(
-  [wrf-hydro],
-  AS_HELP_STRING([--disable-wrf-hydro], [DESCRIPTION])
-)
-AS_IF([test "x$enable_wrf_hydro" != "xno"],
-        [AC_DEFINE([WRF_HYDRO], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION],
-  [Disable enhanced diagnostic output for debugging.]
-)
-AC_ARG_ENABLE(
-  [hydro-d],
-  AS_HELP_STRING([--disable-hydro-d], [DESCRIPTION])
-)
-AS_IF([test "x$enable_hydro_d" != "xno"],
-        [AC_DEFINE([HYDRO_D], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION],
-  [Enable spatially distributed parameters for NoahMP.]
-)
-AC_ARG_ENABLE(
-  [spatial-soil],
-  AS_HELP_STRING([--enable-spatial-soil], [DESCRIPTION])
-)
-AS_IF([test "x$enable_spatial_soil" = "xyes"],
-        [AC_DEFINE([SPATIAL_SOIL], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION], [Enable RAPID model.])
-AC_ARG_ENABLE(
-  [wrf-hydro-rapid],
-  AS_HELP_STRING([--enable-wrf-hydro-rapid], [DESCRIPTION])
-)
-AS_IF([test "x$enable_wrf_hydro_rapid" = "xyes"],
-        [AC_DEFINE([WRF_HYDRO_RAPID], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION], [Disable large NetCDF file support.])
-AC_ARG_ENABLE(
-  [wrfio-ncd-large-file-support],
-  AS_HELP_STRING(
-    [--disable-wrfio-ncd-large-file-support], [DESCRIPTION])
-)
-AS_IF([test "x$enable_wrfio_ncd_large_file_support" != "xno"],
-        [AC_DEFINE([WRFIO_NCD_LARGE_FILE_SUPPORT], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION], [Enable WCOSS file units.])
-AC_ARG_ENABLE(
-  [ncep-wcoss],
-  AS_HELP_STRING([--enable-ncep-wcoss], [DESCRIPTION])
-)
-AS_IF([test "x$enable_ncep_wcoss" = "xyes"],
-        [AC_DEFINE([NCEP_WCOSS], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION], [Enable streamflow nudging.])
-AC_ARG_ENABLE(
-  [wrf-hydro-nudging],
-  AS_HELP_STRING([--enable-wrf-hydro-nudging], [DESCRIPTION])
-)
-AS_IF([test "x$enable_wrf_hydro_nudging" = "xyes"],
-        [AC_DEFINE([WRF_HYDRO_NUDGING], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION], [Enable output channel connectivity.])
-AC_ARG_ENABLE(
-  [output-chan-conn],
-  AS_HELP_STRING([--enable-output-chan-conn], [DESCRIPTION])
-)
-AS_IF([test "x$enable_output_chan_conn" = "xyes"],
-        [AC_DEFINE([OUTPUT_CHAN_CONN], [1], [DESCRIPTION])])
-
-m4_define([DESCRIPTION], [Double precipitation.])
-AC_ARG_ENABLE(
-  [precip-double],
-  AS_HELP_STRING([--enable-precip-double], [DESCRIPTION])
-)
-AS_IF([test "x$enable_precip_double" = "xyes"],
-        [AC_DEFINE([PRECIP_DOUBLE], [1], [DESCRIPTION])])
 
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile
