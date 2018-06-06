@@ -24,4 +24,5 @@ $(objects): %.o: %.f
 	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.f *.stb *~ libMPP.a
+	rm -f *.o *.mod *.f *.stb *~
+
