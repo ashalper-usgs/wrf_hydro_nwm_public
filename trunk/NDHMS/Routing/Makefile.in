@@ -28,7 +28,6 @@ module_lsm_forcing.o module_noah_chan_param_init_rt.o: %.o: %.f
 
 Noah_distr_routing.o: %.o: %.f module_RT.o ../MPP/mpp_land.o \
                       ../Data_Rec/module_RT_data.o
-	cd Overland && make
 	$(MPIFC) -o $@ $(FCFLAGS) -IOverland -I../MPP -I../Data_Rec $<
 
 module_gw_gw2d.o: %.o: %.f module_HYDRO_io.o ../MPP/mpp_land.o	\
