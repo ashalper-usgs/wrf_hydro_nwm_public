@@ -10,7 +10,9 @@ AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
 
 # Checks for programs.
 AC_PROG_CC
-CPP=cpp				# gcc -E doesn't work right now
+# Probably bad, but gcc -E is incompatible with the present
+# source. See also CPPFLAGS assignment below.
+CPP=cpp
 AC_PROG_FC([pgfortran gfortran ifort], [Fortran 90])
 AC_LANG_PUSH([Fortran])
 AX_MPI				# MPI (Message Passing Interface) compiler
@@ -75,8 +77,9 @@ AS_IF(
      )]
 )
 
-# TODO: try to replace with Autotools macros if possible
-CPPFLAGS="-P -xassembler-with-cpp -traditional"
+# TODO: this is probably bad. See
+# https://www.gnu.org/software/automake/manual/html_node/Flag-Variables-Ordering.html
+CPPFLAGS="-P -xassembler-with-cpp -traditional-cpp"
 
 AC_DEFINE([MPP_LAND], [1], [Use parallel land model.])
 

@@ -3161,7 +3161,9 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-CPP=cpp				# gcc -E doesn't work right now
+# Probably bad, but gcc -E is incompatible with the present
+# source. See also CPPFLAGS assignment below.
+CPP=cpp
 ac_ext=${ac_fc_srcext-f}
 ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
@@ -4959,8 +4961,9 @@ $as_echo "$as_me: WARNING: X color database not found; modules under Land_models
 
 fi
 
-# TODO: try to replace with Autotools macros if possible
-CPPFLAGS="-P -xassembler-with-cpp -traditional"
+# TODO: this is probably bad. See
+# https://www.gnu.org/software/automake/manual/html_node/Flag-Variables-Ordering.html
+CPPFLAGS="-P -xassembler-with-cpp -traditional-cpp"
 
 
 $as_echo "#define MPP_LAND 1" >>confdefs.h
