@@ -6,14 +6,10 @@ DEFS = @DEFS@
 
 include global.mk
 
-all: libHYDRO.a
-	if [ ! -d "Run" ]; then \
-	   (mkdir Run); \
-	fi
-	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
-	   (cd Rapid_routing && make -f makefile.cpl rapid); \
-	fi
-	cd LandModel && make
+all: Land_models/NoahMP/run/hrldas.exe
+
+Land_models/NoahMP/run/hrldas.exe: libHYDRO.a
+	cd $(dir $@) && make
 
 # TODO: still need to get dependencies sorted out here. The commands
 # below are sequence-sensitive.
@@ -24,8 +20,19 @@ libHYDRO.a:
 	cd Routing && make
 	cd HYDRO_drv && make
 	cd LandModel_cpl && make
+	cd LandModel && make
+	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
+	   (cd Rapid_routing && make -f makefile.cpl rapid); \
+	fi
+	ar -r $@ $(addsuffix /*.o,MPP Routing Routing/Overland Data_Rec \
+                                  HYDRO_drv LandModel_cpl Rapid_routing \
+                                  $(addprefix \
+                                    LandModel/,Utility_routines phys IO_code))
 
 install:
+	if [ ! -d "Run" ]; then \
+	   (mkdir Run); \
+	fi
 	cp Land_models/NoahMP/run/hrldas.exe Run/wrf_hydro.exe
 
 clean:
