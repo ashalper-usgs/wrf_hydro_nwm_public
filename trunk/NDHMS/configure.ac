@@ -37,7 +37,8 @@ AC_PROG_MAKE_SET
 
 AC_DEFINE([MPP_LAND], [1], [Use parallel land model.])
 
-m4_define([DESCRIPTION],
+m4_define(
+  [DESCRIPTION],
   [A WRF environment variable. Always enabled for compiling WRF-Hydro.]
 )
 AC_ARG_ENABLE(
@@ -47,7 +48,8 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_wrf_hydro" != "xno"],
         [AC_DEFINE([WRF_HYDRO], [1], [DESCRIPTION])])
 
-m4_define([DESCRIPTION],
+m4_define(
+  [DESCRIPTION],
   [Disable enhanced diagnostic output for debugging.]
 )
 AC_ARG_ENABLE(
@@ -57,7 +59,8 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_hydro_d" != "xno"],
         [AC_DEFINE([HYDRO_D], [1], [DESCRIPTION])])
 
-m4_define([DESCRIPTION],
+m4_define(
+  [DESCRIPTION],
   [Enable spatially distributed parameters for NoahMP.]
 )
 AC_ARG_ENABLE(
