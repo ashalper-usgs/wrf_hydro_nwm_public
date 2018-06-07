@@ -12,10 +12,7 @@ FCFLAGS = @FCFLAGS@
 objects = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o	\
           module_mpp_GWBUCKET.o
 
-all: ../libHYDRO.a
-
-../libHYDRO.a: $(objects)
-	ar -r $@ $?
+all: $(objects)
 
 $(objects): %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) $<
@@ -25,4 +22,3 @@ $(objects): %.o: %.f
 
 clean:
 	rm -f *.o *.mod *.f *.stb *~
-

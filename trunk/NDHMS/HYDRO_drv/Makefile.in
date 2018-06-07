@@ -11,14 +11,9 @@ FCFLAGS = @FCFLAGS@
 
 include ../global.mk
 
-objects = module_HYDRO_drv.o
+all: module_HYDRO_drv.o
 
-all: ../libHYDRO.a
-
-../libHYDRO.a: $(objects)
-	ar -r $@ $?
-
-$(objects): %.o: %.f
+module_HYDRO_drv.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I../,Routing MPP Data_Rec) $<
 
 %.f: %.F

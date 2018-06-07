@@ -13,10 +13,7 @@ objects = \
     $(addprefix module_overland_,control streams_and_lakes	\
 	routing_properties mass_balance))
 
-all: ../../libHYDRO.a
-
-../../libHYDRO.a: $(objects) module_overland.o
-	ar -r $@ $?
+all: $(objects) module_overland.o
 
 $(objects): %.o: %.F
 	$(MPIFC) $(FCFLAGS) $<

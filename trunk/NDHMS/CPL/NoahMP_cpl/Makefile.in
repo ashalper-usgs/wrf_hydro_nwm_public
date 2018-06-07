@@ -11,10 +11,7 @@ FCFLAGS = @FCFLAGS@
 
 objects = hrldas_drv_HYDRO.o module_hrldas_HYDRO.o
 
-all: ../../libHYDRO.a
-
-../../libHYDRO.a: $(objects)
-	ar -r $@ $?
+all: $(objects)
 
 module_hrldas_HYDRO.o: %.o: %.f ../../HYDRO_drv/module_HYDRO_drv.o
 	$(MPIFC) -o $@ $(FCFLAGS) \

@@ -10,10 +10,7 @@ FCFLAGS = @FCFLAGS@
 objects = module_date_utilities.o module_model_constants.o	\
 	  module_wrf_utilities.o kwm_string_utilities.o
 
-all: ../../../libHYDRO.a
-
-../../../libHYDRO.a: $(objects)
-	ar -r $@ $?
+all: $(objects)
 
 $(objects): %.o: %.f90
 	$(MPIFC) -o $@ $(FCFLAGS) $<

@@ -15,10 +15,7 @@ objects = $(addsuffix .o, module_date_utilities_rt Noah_distr_routing	\
             module_noah_chan_param_init_rt module_RT			\
             module_channel_routing module_gw_gw2d module_lsm_forcing)
 
-all: ../libHYDRO.a
-
-../libHYDRO.a: $(objects)
-	ar -r $@ $?
+all: $(objects)
 
 module_date_utilities_rt.o: %.o: %.f
 	$(MPIFC) -o $@ $(FCFLAGS) $<
