@@ -6,6 +6,10 @@ DEFS = @DEFS@
 
 include global.mk
 
+objects = \
+  $(addsuffix /*.o,MPP Routing Routing/Overland Data_Rec HYDRO_drv LandModel_cpl) \
+  $(addsuffix /*.o,$(addprefix LandModel/,Utility_routines phys IO_code))
+
 all: Land_models/NoahMP/run/hrldas.exe
 
 Land_models/NoahMP/run/hrldas.exe: libHYDRO.a
@@ -24,10 +28,11 @@ libHYDRO.a:
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd Rapid_routing && make -f makefile.cpl rapid); \
 	fi
-	ar -r $@ $(addsuffix /*.o,MPP Routing Routing/Overland Data_Rec \
-                                  HYDRO_drv LandModel_cpl Rapid_routing \
-                                  $(addprefix \
-                                    LandModel/,Utility_routines phys IO_code))
+        ifneq ($(WRF_HYDRO_RAPID),1)
+	  ar -r $@ $(objects)
+        else
+	  ar -r $@ $(objects) Rapid_routing/.o
+        endif
 
 install:
 	if [ ! -d "Run" ]; then \
