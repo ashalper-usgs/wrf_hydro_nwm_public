@@ -6,7 +6,6 @@ all:
 	cd Utility_routines && make
 	cd phys && make
 	cd IO_code && make
-	cd run && make
 
 # explicitly point to other land model options
 NoahMP:
