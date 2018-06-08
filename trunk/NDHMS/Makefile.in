@@ -39,9 +39,12 @@ install:
 	cp Land_models/NoahMP/run/hrldas.exe Run/wrf_hydro.exe
 
 clean:
+	for dir in MPP Data_Rec Routing HYDRO_drv; do \
+	  (cd $$dir && make clean); \
+	done
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   rm -f lib/librapid.a; \
 	   (cd Rapid_routing && make -f makefile.cpl clean); \
 	fi
-	rm -rf */*.mod */*.o libHYDRO.a Run *~ lib/*.a CPL/*/*.o CPL/*/*.mod
-
+	cd MPP && make clean
+	rm -rf libHYDRO.a Run *~ lib/*.a
