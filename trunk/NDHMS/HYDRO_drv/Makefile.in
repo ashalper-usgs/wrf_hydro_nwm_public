@@ -8,16 +8,21 @@ DEFS = @DEFS@
 
 MPIFC = @MPIFC@
 FCFLAGS = $(strip @FCFLAGS@)
+NETCDF4_FFLAGS = @NETCDF4_FFLAGS@
 
 include ../global.mk
 
 all: module_HYDRO_drv.o
 
-module_HYDRO_drv.o: %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I../,Routing MPP Data_Rec) $<
+module_HYDRO_drv.o: %.o: %.f ../MPP/mpp_land.o \
+                    $(addprefix	../Routing/,\
+                                module_GW_baseflow.o		\
+                                Overland/module_overland.o)	\
+                    ../Data_Rec/module_namelist.o
+	$(MPIFC) -o $@ $(FCFLAGS) $(NETCDF4_FFLAGS) $(addprefix -I,$(^D)) $<
 
 %.f: %.F
-	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
+	$(CPP) $(CPPFLAGS) $(DEFS) $(NETCDF4_FFLAGS) $< > $@
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
