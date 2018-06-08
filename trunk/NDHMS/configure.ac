@@ -10,28 +10,10 @@ AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
 
 # Checks for programs.
 AC_PROG_CC
-# Probably bad, but gcc -E is incompatible with the present
-# source. See also CPPFLAGS assignment below.
-CPP=cpp
-AC_PROG_FC([pgfortran gfortran ifort], [Fortran 90])
+AC_PROG_FC([gfortran], [Fortran 90])
 AC_LANG_PUSH([Fortran])
 AX_MPI
 AC_LANG_POP([Fortran])
-# Portland Group Fortran
-AS_IF(
-  [test "x$FC" = "xpgfortran"],
-  [FCFLAGS="$FCFLAGS -Mfree -c -byteswapio -O2 -Kieee"]
-)
-# GNU Fortran
-AS_IF(
-  [test "x$FC" = "xgfortran"],
-  [FCFLAGS="$FCFLAGS -w -c -ffree-form -ffree-line-length-none -fconvert=big-endian -frecord-marker=4"]
-)
-# Intel Fortran
-AS_IF(
-  [test "x$FC" = "xifort"],
-  [FCFLAGS="$FCFLAGS -w -c -ftz -align all -fno-alias -fp-model precise \$(FORMAT_FREE) \$(BYTESWAPIO)"]
-)
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
@@ -161,10 +143,6 @@ AS_IF(
        might not work properly]
      )]
 )
-
-# TODO: this is probably bad. See
-# https://www.gnu.org/software/automake/manual/html_node/Flag-Variables-Ordering.html
-CPPFLAGS="-P -xassembler-with-cpp -traditional-cpp"
 
 AC_CONFIG_FILES([CPL/CLM_cpl/Makefile
                  CPL/LIS_cpl/Makefile
