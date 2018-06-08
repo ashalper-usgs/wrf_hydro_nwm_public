@@ -25,4 +25,4 @@ module_gw_gw2d_data.o: module_gw_gw2d_data.f
 	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.stb *~ *.f
+	rm -f *.o *.mod *.s *.stb *~ *.f
