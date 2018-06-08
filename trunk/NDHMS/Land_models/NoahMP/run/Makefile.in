@@ -8,14 +8,14 @@ CPP = @CPP@
 CPPFLAGS = $(strip @CPPFLAGS@)
 DEFS = @DEFS@
 LDFLAGS = $(strip @LDFLAGS@)
-NETCDF4_LIBS = @NETCDF4_LIBS@
 
 MPIFC = @MPIFC@
 FCFLAGS = $(strip @FCFLAGS@)
+NETCDF4_LDFLAGS = @NETCDF4_LDFLAGS@
 NETCDF4_FLIBS = @NETCDF4_FLIBS@
 
-# TODO: where are TAO_DIR et al defined in the previous system?
 ifeq ($(WRF_HYDRO_RAPID),1)
+  # TODO:
   include ${TAO_DIR}/bmake/tao_common
   PHDF5_INC = -I ${TACC_HDF5_INC}
   RAPID_MACRO = ${TAO_FORTRAN_LIB} ${TAO_LIB} ${PETSC_LIB} ${PHDF5_INC} \
@@ -41,17 +41,14 @@ objects = ../IO_code/main_hrldas_driver.o				\
 
 all: hrldas.exe
 
-# default we create the exe based on NoahMP
-#  $(HYDRO_LIB) $(RAPID_LIB) $(NETCDFLIB) $(RAPID_MACRO) $(LDFLAGS) $(LIBS)
 hrldas.exe: $(objects)
 	$(MPIFC) -o $@ ../IO_code/main_hrldas_driver.o \
-          -L../../.. -lHYDRO $(NETCDF4_FLIBS)
+                 -L../../.. -lHYDRO \
+                 $(NETCDF4_LDFLAGS) $(NETCDF4_FLIBS)
 
-# Template to create the exe file based on different land model. Such as NoahMP
-#   $(HYDRO_LIB) $(NETCDFLIB) $(LDFLAGS) $(LIBS)
 NoahMP: $(objects)
 	$(MPIFC) -o hrldas.exe -I../IO_code -I../phys $(objects)	\
-	$(NoahMP_objects) ../../../libHYDRO.a $(NETCDF4_FLIBS)
+	         $(NoahMP_objects) ../../../libHYDRO.a $(NETCDF4_FLIBS)
 
 clean:
 	rm -f *~ hrldas.exe
