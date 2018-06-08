@@ -4,9 +4,9 @@
 .SUFFIXES: .o .F
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = $(strip @CPPFLAGS@)
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 
 CLMOBJPATH = /d1/weiyu/scratch/merra_boulder
 

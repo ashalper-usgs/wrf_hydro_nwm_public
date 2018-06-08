@@ -1,11 +1,11 @@
 # Makefile 
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
+CPPFLAGS = $(strip @CPPFLAGS@) -D_HRLDAS_OFFLINE_
 DEFS = @DEFS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 
 objects = module_date_utilities.o module_model_constants.o	\
 	  module_wrf_utilities.o kwm_string_utilities.o

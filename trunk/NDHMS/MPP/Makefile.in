@@ -3,11 +3,11 @@
 .PHONY: all clean
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = $(strip @CPPFLAGS@)
 DEFS = @DEFS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 
 objects = CPL_WRF.o mpp_land.o module_mpp_ReachLS.o	\
           module_mpp_GWBUCKET.o

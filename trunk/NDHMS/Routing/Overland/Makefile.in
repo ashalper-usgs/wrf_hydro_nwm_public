@@ -6,7 +6,7 @@
 
 MPIFC = @MPIFC@
 FFLAGS = @FFLAGS@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 
 objects = \
   $(addsuffix .o,\

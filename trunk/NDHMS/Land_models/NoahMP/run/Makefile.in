@@ -5,13 +5,13 @@ include ../../../global.mk
 .PHONY: all NoahMP clean
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = $(strip @CPPFLAGS@)
 DEFS = @DEFS@
-LDFLAGS = @LDFLAGS@
+LDFLAGS = $(strip @LDFLAGS@)
 NETCDF4_LIBS = @NETCDF4_LIBS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 NETCDF4_FLIBS = @NETCDF4_FLIBS@
 
 # TODO: where are TAO_DIR et al defined in the previous system?

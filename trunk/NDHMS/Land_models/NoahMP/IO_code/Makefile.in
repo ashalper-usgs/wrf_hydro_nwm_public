@@ -3,11 +3,11 @@
 .PHONY: all clean
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@ -D_HRLDAS_OFFLINE_
+CPPFLAGS = $(strip @CPPFLAGS@) -D_HRLDAS_OFFLINE_
 DEFS = @DEFS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 NETCDF4_CFLAGS = @NETCDF4_CFLAGS@
 
 objects = module_NoahMP_hrldas_driver.o main_hrldas_driver.o	\

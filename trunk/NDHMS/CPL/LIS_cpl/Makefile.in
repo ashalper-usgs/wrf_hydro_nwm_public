@@ -3,11 +3,11 @@
 .PHONY: all clean
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = $(strip @CPPFLAGS@)
 DEFS = @DEFS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 
 objects = module_lis_HYDRO.o lis_drv_HYDRO.o
 

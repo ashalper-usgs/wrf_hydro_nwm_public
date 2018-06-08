@@ -1,11 +1,11 @@
 # Makefile.in
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = $(strip @CPPFLAGS@)
 DEFS = @DEFS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
 
 objects = module_hrldas_HYDRO.o hrldas_drv_HYDRO.o
 
