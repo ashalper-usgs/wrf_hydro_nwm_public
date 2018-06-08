@@ -33,4 +33,4 @@ overland_tests.o:
 	$(MPIFC) $(FCFLAGS) overland_tests.F
 
 clean:
-	rm -f *.o *.mod overland_tests *~
+	rm -f *.o *.mod *.s overland_tests *~
