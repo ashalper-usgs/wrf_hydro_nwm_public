@@ -1,6 +1,6 @@
 # Makefile.in
 
-.PHONY: all BASIC clean
+.PHONY: all clean
 
 DEFS = @DEFS@
 
@@ -19,23 +19,19 @@ Land_models/NoahMP/run/hrldas.exe: libHYDRO.a
 # below are sequence-sensitive.
 libHYDRO.a:
 	cd MPP && make
-	cd Routing/Overland && make clean && make # <- hack; try to fix
+	cd Routing/Overland && make # circular dependencies between Routing/* and Data_Rec
 	cd Data_Rec && make
 	cd Routing && make
 	cd HYDRO_drv && make
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
 	   (cd Rapid_routing && make -f makefile.cpl rapid); \
+	   ar -r $@ $(objects) Rapid_routing/.o; \
+	else \
+	   ar -r $@ $(objects); \
 	fi
-        ifneq ($(WRF_HYDRO_RAPID),1)
-	  ar -r $@ $(objects)
-        else
-	  ar -r $@ $(objects) Rapid_routing/.o
-        endif
 
 install:
-	if [ ! -d "Run" ]; then \
-	   (mkdir Run); \
-	fi
+	if [ ! -d "Run" ]; then mkdir Run; fi
 	cp Land_models/NoahMP/run/hrldas.exe Run/wrf_hydro.exe
 
 clean:
