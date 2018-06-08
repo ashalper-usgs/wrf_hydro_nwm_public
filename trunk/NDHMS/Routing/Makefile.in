@@ -3,11 +3,12 @@
 include ../global.mk
 
 CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = $(strip @CPPFLAGS@)
 DEFS = @DEFS@
 
 MPIFC = @MPIFC@
-FCFLAGS = @FCFLAGS@
+FCFLAGS = $(strip @FCFLAGS@)
+NETCDF4_FFLAGS = @NETCDF4_FFLAGS@
 
 objects = $(addsuffix .o, module_date_utilities_rt Noah_distr_routing	\
             module_UDMAP module_GW_baseflow module_HYDRO_utils		\
@@ -83,6 +84,9 @@ endif
 
 module_gw_gw2d.f: %.f: %.F
 	$(CPP) $(CPPFLAGS) $(DEFS) -I../Data_Rec $< > $@
+
+module_UDMAP.f module_HYDRO_io.f module_HYDRO_utils.f: %.f: %.F
+	$(CPP) $(CPPFLAGS) $(DEFS) $(NETCDF4_FFLAGS) $< > $@
 
 clean:	
 	cd Overland && make $@
