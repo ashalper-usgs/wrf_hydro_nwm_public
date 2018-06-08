@@ -21,4 +21,4 @@ $(objects): %.o: %.f
 	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
 
 clean:
-	rm -f *.o *.mod *.f *.stb *~
+	rm -f *.o *.mod *.f *.s *.stb *~
