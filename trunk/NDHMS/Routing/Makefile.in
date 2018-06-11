@@ -2,11 +2,12 @@
 
 .PHONY: all Overland clean
 
+DEFS = @DEFS@
+
 include ../global.mk
 
 CPP = @CPP@
 CPPFLAGS = $(strip @CPPFLAGS@)
-DEFS = @DEFS@
 
 MPIFC = @MPIFC@
 FCFLAGS = $(strip @FCFLAGS@)
@@ -49,9 +50,9 @@ module_HYDRO_io.o: %.o: %.f module_HYDRO_utils.o		\
 	$(MPIFC) -o $@ $(FCFLAGS) $(NETCDF4_FFLAGS) \
                  $(addprefix -I,$(^D)) $<
 else
-# TODO: this needs prerequisites and -I options
-module_HYDRO_io.o: %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) $<
+module_HYDRO_io.o: %.o: %.f module_HYDRO_utils.o ../MPP/mpp_land.o \
+                   ../Data_Rec/module_namelist.o
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(^D)) $<
 endif
 
 module_NWM_io_dict.o: %.o: %.f ../MPP/mpp_land.o	\
@@ -76,9 +77,10 @@ module_RT.o: %.o: %.f module_GW_baseflow.o module_HYDRO_io.o		\
 	$(MPIFC) -o $@ $(FCFLAGS) $(NETCDF4_FFLAGS) \
                  $(addprefix -I,$(sort $(^D))) $<
 else
-# TODO: this needs prerequisites and -I options
-module_RT.o: %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) $<
+module_RT.o: %.o: %.f module_GW_baseflow.o module_HYDRO_io.o	\
+             module_noah_chan_param_init_rt.o ../MPP/mpp_land.o	\
+             ../Data_Rec/module_RT_data.o
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(sort $(^D))) $<
 endif
 
 module_GW_baseflow.o: module_GW_baseflow.f module_UDMAP.o ../MPP/mpp_land.o
@@ -93,11 +95,12 @@ module_channel_routing.o: %.o: %.f Overland/module_overland.o \
                           ../MPP/mpp_land.o ../Data_Rec/module_RT_data.o
 	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(^D)) $<
 else
-module_channel_routing.o: module_UDMAP.o $(addprefix ../nudging/,	\
-                          module_date_utils_nudging.o			\
+module_channel_routing.o: %.o: %.f module_UDMAP.o ../MPP/mpp_land.o	\
+                          ../Data_Rec/module_RT_data.o $(addprefix	\
+                          ../nudging/, module_date_utils_nudging.o	\
                           module_nudging_utils.o			\
                           module_stream_nudging.o)
-	$(MPIFC) -o $@ $(FCFLAGS) $<
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(^D)) $<
 endif
 
 %.f: %.F
