@@ -1,4 +1,9 @@
 # Makefile.in
+#
+# Top-level Automake Makefile.in for NWM.
+#
+# Author - Andrew Halper <ashalper@usgs.gov>
+#
 
 .PHONY: all clean
 
@@ -15,12 +20,15 @@ all: Land_models/NoahMP/run/hrldas.exe
 Land_models/NoahMP/run/hrldas.exe: libHYDRO.a
 	cd $(dir $@) && make
 
-# TODO: still need to get dependencies sorted out here. The commands
-# below are sequence-sensitive.
+# Note: inter-subdirectory dependencies mean the commands below are
+# sequence-sensitive.
 libHYDRO.a:
 	cd MPP && make
 	cd Routing/Overland && make # circular dependencies between Routing/* and Data_Rec
 	cd Data_Rec && make
+	if [ $(WRF_HYDRO_NUDGING) = 1 ]; then \
+	  (cd nudging && make); \
+	fi
 	cd Routing && make
 	cd HYDRO_drv && make
 	if [ $(WRF_HYDRO_RAPID) = 1 ]; then \
