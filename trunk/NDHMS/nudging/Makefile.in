@@ -9,25 +9,26 @@ DEFS = @DEFS@
 MPIFC = @MPIFC@
 FCFLAGS = $(strip @FCFLAGS@)
 
-objects = \
-	module_date_utils_nudging.o \
-	module_stream_nudging.o \
-	module_nudging_io.o \
-	module_nudging_utils.o
+objects = module_stream_nudging.o module_nudging_io.o		\
+          module_nudging_utils.o module_date_utils_nudging.o
 
 all:	$(objects)
 
-$(objects): %.o: %.f
-	$(MPIFC) -o $@ $(FCFLAGS) $<
+module_nudging_utils.o module_date_utils_nudging.o: %.o: %.f
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(^D)) $<
+
+module_nudging_io.o: %.o: %.f ../MPP/mpp_land.o ../Data_Rec/module_namelist.o
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(^D)) $<
+
+module_stream_nudging.o: %.o: %.f module_nudging_io.o	\
+                         module_nudging_utils.o		\
+                         module_date_utils_nudging.o	\
+                         ../MPP/mpp_land.o		\
+                         ../Data_Rec/module_namelist.o
+	$(MPIFC) -o $@ $(FCFLAGS) $(addprefix -I,$(sort $(^D))) $<
 
 %.f: %.F
 	$(CPP) $(CPPFLAGS) $(DEFS) $< > $@
-
-module_nudging_io.o: ../Data_Rec/module_namelist.o \
-	             module_date_utils_nudging.o
-
-module_stream_nudging.o: module_nudging_utils.o \
-	      		 module_nudging_io.o
 
 clean:
 	rm -f *.o *.mod *.stb *~ *.f
