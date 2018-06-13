@@ -21,11 +21,9 @@ else
   SPATIAL_SOIL = 0
 endif
 
-ifeq ($(findstring -DWRF_HYDRO_RAPID,$(DEFS)),-DWRF_HYDRO_RAPID)
-  WRF_HYDRO_RAPID = 1
-else
-  WRF_HYDRO_RAPID = 0
-endif
+# Coupling with the RAPID routing model. This option is not currently
+# supported.
+WRF_HYDRO_RAPID = 0
 
 ifeq ($(findstring \
         -DWRFIO_NCD_LARGE_FILE_SUPPORT,$(DEFS)),-DWRFIO_NCD_LARGE_FILE_SUPPORT)
