@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([WRF-Hydro], [5.0],
+AC_INIT([WRF-Hydro], [5.0.1],
 	[https://github.com/NCAR/wrf_hydro_nwm_public/issues])
 
 AC_CONFIG_SRCDIR([Land_models/Noah/HRLDAS_COLLECT_DATA/lib/cio.c])
@@ -43,7 +43,10 @@ AS_IF([test "x$enable_hydro_d" != "xno"],
 
 m4_define(
   [DESCRIPTION],
-  [Enable spatially distributed parameters for NoahMP.]
+  [Enable spatially distributed parameters for NoahMP. This allows
+  NoahMP to use spatially distributed parameters for the land surface
+  model rather than parameter based on soil class and land use
+  category look up tables.]
 )
 AC_ARG_ENABLE(
   [spatial-soil],
@@ -52,16 +55,10 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_spatial_soil" = "xyes"],
         [AC_DEFINE([SPATIAL_SOIL], [1], [DESCRIPTION])])
 
-m4_define([DESCRIPTION], [Enable RAPID model.])
-AC_ARG_ENABLE(
-  [wrf-hydro-rapid],
-  AS_HELP_STRING([--enable-wrf-hydro-rapid], [DESCRIPTION])
-)
-AS_IF([test "x$enable_wrf_hydro_rapid" = "xyes"], [
-        AC_DEFINE([WRF_HYDRO_RAPID], [1], [DESCRIPTION])
-])
-
-m4_define([DESCRIPTION], [Disable large NetCDF file support.])
+m4_define(
+  [DESCRIPTION],
+  [Disable large NetCDF file support. Do not allow NetCDF I/O of files
+  larger than 2GiB.])
 AC_ARG_ENABLE(
   [wrfio-ncd-large-file-support],
   AS_HELP_STRING(
@@ -70,7 +67,10 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_wrfio_ncd_large_file_support" != "xno"],
         [AC_DEFINE([WRFIO_NCD_LARGE_FILE_SUPPORT], [1], [DESCRIPTION])])
 
-m4_define([DESCRIPTION], [Enable WCOSS file units.])
+m4_define(
+  [DESCRIPTION],
+  [Enable WCOSS file units. Do not use unless working on the WCOSS
+  machines.])
 AC_ARG_ENABLE(
   [ncep-wcoss],
   AS_HELP_STRING([--enable-ncep-wcoss], [DESCRIPTION])
@@ -78,7 +78,11 @@ AC_ARG_ENABLE(
 AS_IF([test "x$enable_ncep_wcoss" = "xyes"],
         [AC_DEFINE([NCEP_WCOSS], [1], [DESCRIPTION])])
 
-m4_define([DESCRIPTION], [Enable streamflow nudging.])
+m4_define(
+  [DESCRIPTION],
+  [Enable the streamflow nudging routines for Muskingum-Cunge
+  Routing.]
+)
 AC_ARG_ENABLE(
   [wrf-hydro-nudging],
   AS_HELP_STRING([--enable-wrf-hydro-nudging], [DESCRIPTION])
