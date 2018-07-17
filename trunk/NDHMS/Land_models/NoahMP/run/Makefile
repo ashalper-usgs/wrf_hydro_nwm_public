@@ -17,6 +17,12 @@ RAPID_MACRO =
 RAPID_LIB =  
 endif
 
+# if on CentOS
+ifeq ($(shell cut -d' ' -f1 /etc/redhat-release), CentOS)
+   # use nf-config to get linker option for NetCDF Fortran lib
+   NETCDFLIB=$(shell /usr/bin/nf-config --libs)
+endif
+
 OBJS_NoahMP = ../IO_code/module_NoahMP_hrldas_driver.o 
 
 OBJS = \
